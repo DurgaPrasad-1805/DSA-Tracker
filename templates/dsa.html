@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Problems</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand"><span class="dot"></span> DSA Tracker</a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/dsa" class="active">Problems</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/timetable">Timetable</a>
+    <a href="/roadmap">Roadmap</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-time" id="nav-clock">--:--:--</span>
+    <a href="https://leetcode.com" target="_blank" class="nav-leet">&#9876; LeetCode</a>
+  </div>
+</nav>
+
+<div class="page">
+  <a href="/" class="back-link">&#8592; Back</a>
+
+  <div class="section-head">
+    <h2>Problem Tracker</h2>
+    <div class="line"></div>
+    <div class="badge">{{ problems | length }} problems</div>
+  </div>
+
+  {% set total_solved = problems | selectattr('status','equalto',1) | list | length %}
+
+  {# ── Custom roadmap topic order ── #}
+  {% set topic_order = [
+    'Arrays', 'Binary Search', 'Strings',
+    'Linked List', 'Stack & Queue',
+    'Recursion & Backtracking', 'Heap / Priority Queue',
+    'Trees', 'Trie',
+    'Graph', 'Dynamic Programming', 'Greedy'
+  ] %}
+  {% set existing = problems | map(attribute='topic') | unique | list %}
+  {% set topics_list = [] %}
+  {% for t in topic_order %}
+    {% if t in existing %}{% set _ = topics_list.append(t) %}{% endif %}
+  {% endfor %}
+  {% for t in existing %}
+    {% if t not in topic_order %}{% set _ = topics_list.append(t) %}{% endif %}
+  {% endfor %}
+
+  {# ── Summary bar ── #}
+  <div class="summary-bar fade-up">
+    <div class="summary-item">
+      <span class="summary-num" style="color:var(--text);">{{ problems | length }}</span>
+      <span class="summary-lbl">Total</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-num" style="color:var(--accent);">{{ total_solved }}</span>
+      <span class="summary-lbl">Solved</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-num" style="color:var(--accent3);">{{ problems | length - total_solved }}</span>
+      <span class="summary-lbl">Left</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-num" style="color:var(--accent2);">{{ topics_list | length }}</span>
+      <span class="summary-lbl">Topics</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-num" style="color:var(--accent);">{{ problems | selectattr('difficulty','equalto','Easy') | list | length }}</span>
+      <span class="summary-lbl">Easy</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-num" style="color:var(--warn);">{{ problems | selectattr('difficulty','equalto','Medium') | list | length }}</span>
+      <span class="summary-lbl">Medium</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-num" style="color:var(--accent3);">{{ problems | selectattr('difficulty','equalto','Hard') | list | length }}</span>
+      <span class="summary-lbl">Hard</span>
+    </div>
+    <div class="summary-search">
+      <input class="search-box" type="text" id="search-input" placeholder="Search...">
+    </div>
+  </div>
+
+  {# ── Phase label config — plain ASCII dots, no special chars ── #}
+  {% set phase_starts = {
+    'Arrays':                   'p1',
+    'Linked List':              'p2',
+    'Recursion & Backtracking': 'p3',
+    'Trees':                    'p4',
+    'Graph':                    'p5'
+  } %}
+
+  {% set phase_info = {
+    'p1': ['Phase 1', 'Foundations',         'D1-D20',  '#1a7a4a', '#e8f5ee', '#b6e4cc'],
+    'p2': ['Phase 2', 'Core Structures',     'D21-D35', '#2d5fa6', '#e8eefc', '#b6caf4'],
+    'p3': ['Phase 3', 'Important Patterns',  'D36-D55', '#b45309', '#fef3c7', '#fcd97d'],
+    'p4': ['Phase 4', 'Trees + Graphs',      'D56-D75', '#c2410c', '#fef0eb', '#f9c4ae'],
+    'p5': ['Phase 5', 'Advanced Algorithms', 'D76-D90', '#7e22ce', '#f3e8ff', '#d8b4fe']
+  } %}
+
+  {% set topic_icons = {
+    'Arrays': 'Array',
+    'Binary Search': 'BinSrch',
+    'Strings': 'Str',
+    'Linked List': 'LL',
+    'Stack & Queue': 'S&Q',
+    'Recursion & Backtracking': 'Rec',
+    'Heap / Priority Queue': 'Heap',
+    'Trees': 'Tree',
+    'Trie': 'Trie',
+    'Graph': 'Graph',
+    'Dynamic Programming': 'DP',
+    'Greedy': 'Greedy'
+  } %}
+
+  {% set pill_colors = ['pill-green','pill-blue','pill-red','pill-amber','pill-purple'] %}
+
+  {# ── Topics ── #}
+  {% for topic in topics_list %}
+
+    {# Phase divider #}
+    {% if topic in phase_starts %}
+      {% set pk = phase_starts[topic] %}
+      {% set pi = phase_info[pk] %}
+      <div class="phase-divider" data-phase="{{ pk }}">
+        <div class="phase-divider-label" data-phase="{{ pk }}">{{ pi[0] }} &mdash; {{ pi[1] }}</div>
+        <div class="phase-divider-range">{{ pi[2] }}</div>
+        <div class="phase-divider-line"></div>
+      </div>
+    {% endif %}
+
+    {% set tp  = problems | selectattr('topic','equalto',topic) | list %}
+    {% set ts  = tp | selectattr('status','equalto',1) | list | length %}
+    {% set tt  = tp | length %}
+    {% set pct = ((ts/tt)*100)|round|int if tt>0 else 0 %}
+
+    <div class="topic-section fade-up" data-topic="{{ topic }}">
+      <button class="topic-toggle" onclick="toggleSection(this)">
+        <span class="topic-icon" style="font-family:'DM Mono',monospace;font-size:0.6rem;background:var(--surface2);border:1px solid var(--border);padding:2px 6px;border-radius:4px;color:var(--muted);">{{ topic_icons.get(topic, topic[:3]) }}</span>
+        <span class="topic-title">{{ topic }}</span>
+        <div class="topic-meta">
+          <span class="topic-counts">{{ ts }}/{{ tt }} solved</span>
+          <div class="topic-mini-bar">
+            <div class="topic-mini-fill" data-pct="{{ pct }}" style="width:0%"></div>
+          </div>
+          <span class="topic-pct">{{ pct }}%</span>
+        </div>
+        <span class="chevron">&#9660;</span>
+      </button>
+
+      <div class="topic-body">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Problem</th>
+              <th>Pattern</th>
+              <th>Difficulty</th>
+              <th>Done</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in tp %}
+            <tr data-topic="{{ p.topic }}" data-name="{{ p.name | lower }}" class="problem-row" data-solved="{{ p.status }}">
+              <td style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:0.68rem;width:36px;">{{ loop.index }}</td>
+              <td class="problem-name">{{ p.name }}</td>
+              <td><span class="pill" data-pidx="{{ loop.index0 % 5 }}">{{ p.pattern }}</span></td>
+              <td>
+                {% if p.difficulty == 'Easy' %}<span class="diff-easy">Easy</span>
+                {% elif p.difficulty == 'Hard' %}<span class="diff-hard">Hard</span>
+                {% else %}<span class="diff-medium">Medium</span>{% endif %}
+              </td>
+              <td class="check-wrap">
+                <input type="checkbox" class="custom-cb" data-id="{{ p.id }}" {% if p.status==1 %}checked{% endif %}>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  {% endfor %}
+
+  {# ── Pattern Progress ── #}
+  <div class="section-head" style="margin-top:2.5rem;">
+    <h2>Pattern Progress</h2>
+    <div class="line"></div>
+    <div class="badge">16 patterns</div>
+  </div>
+
+  {% set all_patterns = [
+    'Sliding Window','Two Pointers','Fast & Slow Pointers',
+    'Merge Intervals','Cyclic Sort','In-place Reversal',
+    'Tree BFS','Tree DFS','Two Heaps','Subsets',
+    'Modified Binary Search','Bitwise XOR',
+    'Top K Elements','K-way Merge','0-1 Knapsack','Topological Sort'
+  ] %}
+
+  <div class="pattern-grid fade-up">
+    {% for pname in all_patterns %}
+      {% set pp  = problems | selectattr('pattern','equalto',pname) | list %}
+      {% set ps  = pp | selectattr('status','equalto',1) | list | length %}
+      {% set pt  = pp | length %}
+      {% set pct = ((ps/pt)*100)|round|int if pt>0 else 0 %}
+      <div class="pattern-card" data-mastered="{{ '1' if ps==pt and pt>0 else '0' }}">
+        <div>
+          <div class="pattern-name">{{ pname }}</div>
+          <div class="pattern-count">{{ ps }}/{{ pt if pt>0 else '?' }} solved</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="pattern-bar-wrap">
+            <div class="pattern-bar" data-pct="{{ pct }}" style="width:0%"></div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);width:28px;text-align:right;">{{ pct }}%</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script src="/static/script.js"></script>
+<script>
+function toggleSection(btn){
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+document.getElementById('search-input').addEventListener('input', function(){
+  var q = this.value.trim().toLowerCase();
+  document.querySelectorAll('tr.problem-row').forEach(function(row){
+    var match = !q || row.dataset.name.indexOf(q) !== -1;
+    row.style.display = match ? '' : 'none';
+    if(match && q){
+      var body = row.closest('.topic-body');
+      var btn  = body && body.previousElementSibling;
+      if(body && !body.classList.contains('open')){
+        body.classList.add('open');
+        if(btn) btn.classList.add('open');
+      }
+    }
+  });
+  document.querySelectorAll('.topic-section').forEach(function(sec){
+    if(!q){ sec.style.display = ''; return; }
+    var visible = Array.from(sec.querySelectorAll('tr.problem-row')).some(function(r){ return r.style.display !== 'none'; });
+    sec.style.display = visible ? '' : 'none';
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function(){
+  var first = document.querySelector('.topic-toggle');
+  if(first){ first.classList.add('open'); first.nextElementSibling.classList.add('open'); }
+});
+</script>
+<script>
+(function tick(){
+  var el = document.getElementById("nav-clock");
+  if(el){
+    var n=new Date(), h=n.getHours(), m=n.getMinutes(), s=n.getSeconds();
+    var ampm=h>=12?"PM":"AM";
+    h=h%12; h=h?h:12;
+    el.textContent=(h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s)+" "+ampm;
+  }
+  setTimeout(tick,1000);
+})();
+</script>
+</body>
+</html>

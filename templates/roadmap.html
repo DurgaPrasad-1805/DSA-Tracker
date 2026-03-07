@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    /* ── Phase card ── */
+    .phase-wrap {
+      margin-bottom: 2rem;
+    }
+
+    .phase-header {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r) var(--r) 0 0;
+      padding: 1.1rem 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .phase-num {
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem; font-weight: 900;
+      line-height: 1; color: var(--accent);
+      width: 36px; flex-shrink: 0;
+    }
+
+    .phase-info { flex: 1; }
+
+    .phase-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 700; font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .phase-range {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem; color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .phase-prog {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .phase-prog-bar {
+      width: 100px; height: 6px;
+      background: var(--border); border-radius: 3px; overflow: hidden;
+    }
+
+    .phase-prog-fill {
+      height: 100%; border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), #34d399);
+      transition: width 0.8s ease;
+    }
+
+    .phase-prog-txt {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; color: var(--accent); font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* ── Topic group inside phase ── */
+    .topic-group {
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topic-group:last-child {
+      border-radius: 0 0 var(--r) var(--r);
+    }
+
+    .topic-group-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0.7rem 1.4rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 58px; z-index: 5;
+    }
+
+    .topic-group-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 700; font-size: 0.88rem;
+      color: var(--text2); flex: 1;
+    }
+
+    .topic-day-range {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem; color: var(--muted);
+    }
+
+    /* ── Day grid ── */
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+      gap: 0.6rem;
+      padding: 1rem 1.4rem;
+      background: var(--surface);
+    }
+
+    .day-box {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; padding: 0.7rem 0.5rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--surface);
+      user-select: none;
+    }
+
+    .day-box:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+    .day-box.done {
+      background: var(--accent-lt);
+      border-color: var(--accent);
+    }
+
+    .day-box.done .day-num { color: var(--accent); }
+    .day-box.done .day-check { background: var(--accent); border-color: var(--accent); }
+    .day-box.done .day-check::after {
+      content: '';
+      position: absolute; left: 4px; top: 1px;
+      width: 4px; height: 8px;
+      border: 2px solid #fff;
+      border-top: none; border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .day-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--muted); line-height: 1;
+    }
+
+    .day-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem; color: var(--muted2);
+      text-align: center; line-height: 1.3;
+    }
+
+    .day-check {
+      width: 16px; height: 16px;
+      border: 1.5px solid var(--border2);
+      border-radius: 4px;
+      position: relative;
+      transition: all 0.15s;
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    /* ── Overall progress ── */
+    .overall-prog {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.4rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .phase-colors {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;
+    }
+
+    .phase-chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .p1 { background: #e8f5ee; border-color: rgba(26,122,74,0.3); color: var(--accent); }
+    .p2 { background: #e8eefc; border-color: rgba(45,95,166,0.3); color: var(--accent2); }
+    .p3 { background: #fef3c7; border-color: rgba(180,83,9,0.3);  color: var(--warn); }
+    .p4 { background: #fef0eb; border-color: rgba(194,65,12,0.3); color: var(--accent3); }
+    .p5 { background: #f3e8ff; border-color: rgba(126,34,206,0.3);color: #7e22ce; }
+
+    .phase-header.p1-head { border-top: 3px solid var(--accent); }
+    .phase-header.p2-head { border-top: 3px solid var(--accent2); }
+    .phase-header.p3-head { border-top: 3px solid var(--warn); }
+    .phase-header.p4-head { border-top: 3px solid var(--accent3); }
+    .phase-header.p5-head { border-top: 3px solid #7e22ce; }
+
+    .phase-num.p1 { color: var(--accent); }
+    .phase-num.p2 { color: var(--accent2); }
+    .phase-num.p3 { color: var(--warn); }
+    .phase-num.p4 { color: var(--accent3); }
+    .phase-num.p5 { color: #7e22ce; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand"><span class="dot"></span> DSA Tracker</a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/dsa">Problems</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/timetable">Timetable</a>
+    <a href="/roadmap">Roadmap</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-time" id="nav-clock">--:--:--</span>
+    <a href="https://leetcode.com" target="_blank" class="nav-leet">⚔️ LeetCode</a>
+  </div>
+</nav>
+
+<div class="page">
+  <a href="/" class="back-link">← Back</a>
+
+  <div class="section-head">
+    <h2>90-Day Roadmap</h2>
+    <div class="line"></div>
+    <div class="badge">Mar 9 – Jun 6, 2026</div>
+  </div>
+
+  {% set total_days = days | length %}
+  {% set done_days  = days | selectattr('status','equalto',1) | list | length %}
+  {% set pct_overall = ((done_days / total_days)*100)|round|int if total_days > 0 else 0 %}
+
+  <!-- Overall progress -->
+  <div class="overall-prog fade-up">
+    <div class="progress-header">
+      <span class="progress-title">Overall Journey</span>
+      <span class="progress-pct">Day {{ done_days }} / {{ total_days }} · {{ pct_overall }}%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" data-pct="{{ pct_overall }}" style="width:0%"></div>
+    </div>
+    <div class="phase-colors" style="margin-top:1rem;">
+      <span class="phase-chip p1">Phase 1 · Foundations · D1–D20</span>
+      <span class="phase-chip p2">Phase 2 · Core Structures · D21–D35</span>
+      <span class="phase-chip p3">Phase 3 · Patterns · D36–D55</span>
+      <span class="phase-chip p4">Phase 4 · Trees + Graphs · D56–D75</span>
+      <span class="phase-chip p5">Phase 5 · Advanced · D76–D90</span>
+    </div>
+  </div>
+
+  {% set phase_colors = {1:'p1',2:'p2',3:'p3',4:'p4',5:'p5'} %}
+  {% set phase_icons  = {1:'🧱',2:'🏗️',3:'🔁',4:'🌲',5:'🚀'} %}
+  {% set phase_ranges = {1:'Days 1–20',2:'Days 21–35',3:'Days 36–55',4:'Days 56–75',5:'Days 76–90'} %}
+
+  {% set phases = days | map(attribute='phase') | unique | list | sort %}
+
+  {% for phase in phases %}
+    {% set phase_days  = days | selectattr('phase','equalto',phase) | list %}
+    {% set phase_done  = phase_days | selectattr('status','equalto',1) | list | length %}
+    {% set phase_total = phase_days | length %}
+    {% set phase_pct   = ((phase_done/phase_total)*100)|round|int if phase_total>0 else 0 %}
+    {% set phase_name  = phase_days[0].phase_name %}
+    {% set pc          = phase_colors[phase] %}
+
+    <div class="phase-wrap fade-up">
+      <div class="phase-header {{ pc }}-head">
+        <div class="phase-num {{ pc }}">{{ phase_icons[phase] }}</div>
+        <div class="phase-info">
+          <div class="phase-name">Phase {{ phase }} — {{ phase_name }}</div>
+          <div class="phase-range">{{ phase_ranges[phase] }}</div>
+        </div>
+        <div class="phase-prog">
+          <span style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);">{{ phase_done }}/{{ phase_total }}</span>
+          <div class="phase-prog-bar">
+            <div class="phase-prog-fill" data-pct="{{ phase_pct }}" style="width:0%"></div>
+          </div>
+          <span class="phase-prog-txt">{{ phase_pct }}%</span>
+        </div>
+      </div>
+
+      {% set topic_names = phase_days | map(attribute='topic') | unique | list %}
+      {% for topic in topic_names %}
+        {% set topic_days = phase_days | selectattr('topic','equalto',topic) | list %}
+        {% set t_first    = topic_days[0].day_number %}
+        {% set t_last     = topic_days[-1].day_number %}
+        {% set t_done     = topic_days | selectattr('status','equalto',1) | list | length %}
+
+        <div class="topic-group">
+          <div class="topic-group-header">
+            <span class="topic-group-name">{{ topic }}</span>
+            <span class="topic-day-range">D{{ t_first }}–D{{ t_last }}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--accent);margin-left:10px;">{{ t_done }}/{{ topic_days|length }}</span>
+          </div>
+          <div class="day-grid">
+            {% for d in topic_days %}
+            <div class="day-box {{ 'done' if d.status==1 else '' }}" data-day="{{ d.day_number }}" onclick="toggleDay(this)">
+              <div class="day-check"></div>
+              <div class="day-num">D{{ d.day_number }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+</div>
+
+<script src="/static/script.js"></script>
+<script>
+async function toggleDay(box) {
+  const day = box.dataset.day;
+  const res  = await fetch(`/api/toggle_day/${day}`, { method: 'POST' });
+  const data = await res.json();
+  if (data.ok) {
+    box.classList.toggle('done', data.status === 1);
+    // update phase progress bar
+    const phaseWrap = box.closest('.phase-wrap');
+    if (phaseWrap) {
+      const fill = phaseWrap.querySelector('.phase-prog-fill');
+      const txt  = phaseWrap.querySelector('.phase-prog-txt');
+      const countEl = phaseWrap.querySelector('.phase-prog + span, .phase-prog span');
+      const pct  = Math.round((data.phase_done / data.phase_total) * 100);
+      if (fill) fill.style.width = pct + '%';
+      if (txt)  txt.textContent  = pct + '%';
+    }
+    // update overall bar
+    const allBoxes = document.querySelectorAll('.day-box');
+    const allDone  = document.querySelectorAll('.day-box.done').length;
+    const pctAll   = Math.round((allDone / allBoxes.length) * 100);
+    const overallFill = document.querySelector('.overall-prog .progress-fill');
+    const overallPct  = document.querySelector('.overall-prog .progress-pct');
+    if (overallFill) overallFill.style.width = pctAll + '%';
+    if (overallPct)  overallPct.textContent  = `Day ${allDone} / ${allBoxes.length} · ${pctAll}%`;
+  }
+}
+</script>
+
+
+<script>
+(function tick(){
+  var el = document.getElementById("nav-clock");
+  if(el){
+    var n=new Date(), h=n.getHours(), m=n.getMinutes(), s=n.getSeconds();
+    var ampm=h>=12?"PM":"AM";
+    h=h%12; h=h?h:12;
+    el.textContent=(h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s)+" "+ampm;
+  }
+  setTimeout(tick,1000);
+})();
+</script>
+</body>
+</html>

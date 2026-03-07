@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand"><span class="dot"></span> DSA Tracker</a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/dsa">Problems</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/timetable">Timetable</a>
+    <a href="/roadmap">Roadmap</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-time" id="nav-clock">--:--:--</span>
+    <a href="https://leetcode.com" target="_blank" class="nav-leet">⚔️ LeetCode</a>
+  </div>
+</nav>
+
+<div class="page">
+  <a href="/" class="back-link">← Back</a>
+
+  <div class="section-head">
+    <h2>Daily Timetable</h2>
+    <div class="line"></div>
+    <div class="badge">Mar 9 – Jun 6, 2026</div>
+  </div>
+
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.5rem;">
+    Optimised around college hours. Weekdays ~7 hrs study. Weekends up to 10–11 hrs.
+  </p>
+
+  <div class="tt-tabs">
+    <button class="tt-tab active" data-target="tt-weekday">Mon–Fri</button>
+    <button class="tt-tab" data-target="tt-saturday">Saturday</button>
+    <button class="tt-tab" data-target="tt-sunday">Sunday</button>
+  </div>
+
+  <div class="tt-grid active" id="tt-weekday">
+    {% set weekday = [
+      ('06:00 – 07:00','🧠 DSA Revision — yesterday\'s problems','dsa'),
+      ('07:00 – 08:00','📐 New Topic Concept Study / Pattern Notes','dsa'),
+      ('08:00 – 08:25','🍳 Breakfast + Get Ready','break'),
+      ('08:25 – 03:20','🏫 College Classes','college'),
+      ('03:30 – 04:30','🔁 Quick Revision + New Problem (Paper First)','dsa'),
+      ('04:30 – 05:00','☕ Break + Snacks','break'),
+      ('05:00 – 07:00','⚡ DSA Deep Work — LeetCode (2+ problems)','dsa'),
+      ('07:00 – 07:30','🍽 Dinner','break'),
+      ('07:30 – 09:00','📖 Core Subject Study (DBMS / OS / CN / OOPs / ML)','subject'),
+      ('09:00 – 09:30','📓 Notes Update / GitHub Commit','highlight'),
+      ('09:30 – 10:00','🔄 Quick DSA Revision / Editorials','dsa'),
+      ('10:00 – 11:00','🎮 Free Time / Project / Relax','break'),
+      ('11:00 – 12:00','📚 Semester Coursework','subject'),
+      ('12:00 AM','😴 Sleep','sleep'),
+    ] %}
+    {% for time, act, cls in weekday %}
+    <div class="tt-time">{{ time }}</div>
+    <div class="tt-block {{ cls }}">{{ act }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="tt-grid" id="tt-saturday">
+    {% set saturday = [
+      ('07:30 – 08:30','🍳 Wake Up + Breakfast','break'),
+      ('08:30 – 10:30','⚡ DSA — 3 Problems (Timed, Medium/Hard)','dsa'),
+      ('10:30 – 12:00','📐 Pattern Deep Dive + Notes','dsa'),
+      ('12:00 – 01:00','🍽 Lunch','break'),
+      ('01:00 – 03:00','📖 Core Subject (2 topics in depth)','subject'),
+      ('03:00 – 04:00','🔁 Revision — Week\'s DSA Problems','dsa'),
+      ('04:00 – 04:30','☕ Break + Snacks','break'),
+      ('04:30 – 06:00','📖 Subject Continued / Mock Q&A','subject'),
+      ('06:00 – 07:00','🏸 Badminton / Walk (Optional)','break'),
+      ('07:00 – 08:00','🍽 Dinner','break'),
+      ('08:00 – 09:30','📓 Notes + GitHub + Semester Work','highlight'),
+      ('09:30 – 11:00','🔄 DSA Editorials + Weak Area Drill','dsa'),
+      ('11:00 – 12:00','🎮 Free Time / Relax','break'),
+      ('12:00 AM','😴 Sleep','sleep'),
+    ] %}
+    {% for time, act, cls in saturday %}
+    <div class="tt-time">{{ time }}</div>
+    <div class="tt-block {{ cls }}">{{ act }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="tt-grid" id="tt-sunday">
+    {% set sunday = [
+      ('07:30 – 09:00','🍳 Wake Up + Breakfast (Slow Morning)','break'),
+      ('09:00 – 11:00','🏆 LeetCode Contest / Hard Problems','dsa'),
+      ('11:00 – 12:30','📓 Notes Update / GitHub Commits','highlight'),
+      ('12:30 – 01:30','🍽 Lunch','break'),
+      ('01:30 – 04:30','🕹 Free Time / Friends / Family','break'),
+      ('04:30 – 05:00','☕ Break + Snacks','break'),
+      ('05:00 – 07:00','🏸 Badminton (Optional)','break'),
+      ('07:00 – 08:00','🍽 Dinner','break'),
+      ('08:00 – 09:30','📅 Plan Next Week + Family Time','highlight'),
+      ('09:30 – 11:00','🔄 Full Week Revision (DSA + Subjects)','dsa'),
+      ('11:00 – 12:00','📖 Light Subject Review','subject'),
+      ('12:00 AM','😴 Sleep','sleep'),
+    ] %}
+    {% for time, act, cls in sunday %}
+    <div class="tt-time">{{ time }}</div>
+    <div class="tt-block {{ cls }}">{{ act }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="section-head" style="margin-top:2.5rem;">
+    <h2>Block Legend</h2>
+    <div class="line"></div>
+  </div>
+  <div class="tasks-grid">
+    <div class="task-item"><span class="task-icon">🧩</span><span style="color:var(--accent);font-weight:700;">DSA Block</span> — LeetCode + Paper practice</div>
+    <div class="task-item"><span class="task-icon">📖</span><span style="color:var(--accent3);font-weight:700;">Subject Block</span> — DBMS, OS, CN, OOPs, ML</div>
+    <div class="task-item"><span class="task-icon">🏫</span><span style="color:var(--accent2);font-weight:700;">College</span> — Attend, engage, take notes</div>
+    <div class="task-item"><span class="task-icon">📓</span><span style="color:var(--warn);font-weight:700;">Highlight</span> — Notes, GitHub, planning</div>
+  </div>
+</div>
+
+<script src="/static/script.js"></script>
+
+
+<script>
+(function tick(){
+  var el = document.getElementById("nav-clock");
+  if(el){
+    var n=new Date(), h=n.getHours(), m=n.getMinutes(), s=n.getSeconds();
+    var ampm=h>=12?"PM":"AM";
+    h=h%12; h=h?h:12;
+    el.textContent=(h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s)+" "+ampm;
+  }
+  setTimeout(tick,1000);
+})();
+</script>
+</body>
+</html>

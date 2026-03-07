@@ -1,0 +1,1112 @@
+[
+  {
+    "name": "Majority Element",
+    "pattern": "Bitwise XOR",
+    "topic": "Arrays",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Repeat and Missing Number",
+    "pattern": "Cyclic Sort",
+    "topic": "Arrays",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Merge 2 Sorted Array Without Extra Space",
+    "pattern": "Two Pointers",
+    "topic": "Arrays",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Single Number",
+    "pattern": "Bitwise XOR",
+    "topic": "Arrays",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Stock Buy and Sell",
+    "pattern": "Sliding Window",
+    "topic": "Arrays",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Kadane's Algorithm",
+    "pattern": "Prefix Sum",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Pow(x, n)",
+    "pattern": "Modified Binary Search",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Container With Most Water",
+    "pattern": "Two Pointers",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Sort Array of 0s 1s and 2s",
+    "pattern": "Two Pointers",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "3Sum",
+    "pattern": "Two Pointers",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "4Sum",
+    "pattern": "Two Pointers",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Search a 2D Matrix",
+    "pattern": "Modified Binary Search",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Next Permutation",
+    "pattern": "Two Pointers",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Merge Overlapping Intervals",
+    "pattern": "Merge Intervals",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Longest Substring Without Repeating",
+    "pattern": "Sliding Window",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Set Matrix Zeroes",
+    "pattern": "Hash Map",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Word Search",
+    "pattern": "Subsets",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Product of Array Except Itself",
+    "pattern": "Prefix Sum",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Subarray Sum Equals K",
+    "pattern": "Prefix Sum",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Find Duplicate",
+    "pattern": "Cyclic Sort",
+    "topic": "Arrays",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Count Inversions",
+    "pattern": "Merge Intervals",
+    "topic": "Arrays",
+    "difficulty": "Medium / Hard"
+  },
+  {
+    "name": "Trapping Rainwater",
+    "pattern": "Two Pointers",
+    "topic": "Arrays",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Sliding Window Maximum",
+    "pattern": "Sliding Window",
+    "topic": "Arrays",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Reverse Pairs",
+    "pattern": "Merge Intervals",
+    "topic": "Arrays",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Largest Rectangle in a Histogram",
+    "pattern": "Stack",
+    "topic": "Arrays",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Search in Rotated Sorted Array",
+    "pattern": "Modified Binary Search",
+    "topic": "Binary Search",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Peak Index in Mountain Array",
+    "pattern": "Modified Binary Search",
+    "topic": "Binary Search",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Single Element in Sorted Array",
+    "pattern": "Modified Binary Search",
+    "topic": "Binary Search",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Allocate Minimum Pages (Book Allocation)",
+    "pattern": "Modified Binary Search",
+    "topic": "Binary Search",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Painter's Partition",
+    "pattern": "Modified Binary Search",
+    "topic": "Binary Search",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Aggressive Cows",
+    "pattern": "Modified Binary Search",
+    "topic": "Binary Search",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Median of 2 Sorted Arrays",
+    "pattern": "Modified Binary Search",
+    "topic": "Binary Search",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Valid Palindrome",
+    "pattern": "Two Pointers",
+    "topic": "Strings",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Longest Common Prefix",
+    "pattern": "Trie",
+    "topic": "Strings",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Valid Anagram",
+    "pattern": "Hash Map",
+    "topic": "Strings",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Reverse Words in String",
+    "pattern": "Two Pointers",
+    "topic": "Strings",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Remove All Occurrences of String",
+    "pattern": "Sliding Window",
+    "topic": "Strings",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Permutation in String",
+    "pattern": "Sliding Window",
+    "topic": "Strings",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "String Compression",
+    "pattern": "Two Pointers",
+    "topic": "Strings",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Group Anagrams",
+    "pattern": "Hash Map",
+    "topic": "Strings",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Minimum Window Substring",
+    "pattern": "Sliding Window",
+    "topic": "Strings",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "KMP Algorithm",
+    "pattern": "Sliding Window",
+    "topic": "Strings",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Robin Karp",
+    "pattern": "Sliding Window",
+    "topic": "Strings",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Combination Sum I",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Combination Sum II",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Palindrome Partitioning",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Knights Tour",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "M Coloring",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Rat in a Maze",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Subsets II",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Merge Sort",
+    "pattern": "Merge Intervals",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "N Queens",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Sudoku Solver",
+    "pattern": "Subsets",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Count Inversions (Backtracking)",
+    "pattern": "Merge Intervals",
+    "topic": "Recursion & Backtracking",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Reverse a Linked List",
+    "pattern": "In-place Reversal",
+    "topic": "Linked List",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Middle of Linked List",
+    "pattern": "Fast & Slow Pointers",
+    "topic": "Linked List",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Merge 2 Sorted Linked Lists",
+    "pattern": "Two Pointers",
+    "topic": "Linked List",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Check if LL is Palindrome",
+    "pattern": "Fast & Slow Pointers",
+    "topic": "Linked List",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Detect Cycle in LL",
+    "pattern": "Fast & Slow Pointers",
+    "topic": "Linked List",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Remove Cycle in LL",
+    "pattern": "Fast & Slow Pointers",
+    "topic": "Linked List",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Flatten Linked List",
+    "pattern": "Merge Intervals",
+    "topic": "Linked List",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Clone LL with Random Pointers",
+    "pattern": "Hash Map",
+    "topic": "Linked List",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Add 2 Numbers",
+    "pattern": "Two Pointers",
+    "topic": "Linked List",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Reverse Linked List II",
+    "pattern": "In-place Reversal",
+    "topic": "Linked List",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "LRU Cache",
+    "pattern": "Hash Map",
+    "topic": "Linked List",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Rotate a Linked List",
+    "pattern": "Fast & Slow Pointers",
+    "topic": "Linked List",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Reverse Nodes in K Groups",
+    "pattern": "In-place Reversal",
+    "topic": "Linked List",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Implement Stack using Queue",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Implement Queue using Stack",
+    "pattern": "Queue",
+    "topic": "Stack & Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Next Greater Element I",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Valid Parentheses",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "1st Non Repeating in Stream",
+    "pattern": "Queue",
+    "topic": "Stack & Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Reverse First K Elements of Queue",
+    "pattern": "Queue",
+    "topic": "Stack & Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Time Needed to Buy Tickets",
+    "pattern": "Queue",
+    "topic": "Stack & Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Next Greater Element II",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Previous Smaller Element",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Celebrity Problem",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Get Min Element from Stack",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Circular Tour / Gas Station",
+    "pattern": "Greedy",
+    "topic": "Stack & Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Rotten Oranges",
+    "pattern": "Tree BFS",
+    "topic": "Stack & Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Stock Span",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Max Area in Histogram",
+    "pattern": "Stack",
+    "topic": "Stack & Queue",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Inorder Traversal",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Preorder Traversal",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Postorder Traversal",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Symmetric Tree",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Minimum Distance Between Nodes",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Are 2 Trees Identical",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Morris Inorder Traversal",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Diameter of Binary Tree",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Check if Tree is Height Balanced",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Subtree of Another Tree",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Check if BT Mirror of Itself",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Top View of a Tree",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Bottom View of a Tree",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Level Order Traversal",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Kth Level of Tree",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "LCA of Binary Tree",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Transform to Sum Tree",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Construct BT from Inorder and Preorder",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Construct BT from Inorder and Postorder",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Flatten BT to Linked List",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Max Width of Binary Tree",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Zig Zag Traversal of BT",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Max Path Sum",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Kth Ancestor",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Kth Largest in BST",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Sorted Array to Balanced BST",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Validate BST",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Kth Smallest in BST",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "LCA in BST",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Populate Next Right Pointers",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Recover BST",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Construct BST from Preorder",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "BST Iterator",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Flatten BST to Sorted List",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Inorder Successor",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Inorder Predecessor",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Largest BST in BT",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Serialize and Deserialize BST",
+    "pattern": "Tree BFS",
+    "topic": "Trees",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Merge 2 BSTs",
+    "pattern": "Tree DFS",
+    "topic": "Trees",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Merge K Sorted Arrays",
+    "pattern": "K-way Merge",
+    "topic": "Heap / Priority Queue",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "K Most Frequent Elements",
+    "pattern": "Top K Elements",
+    "topic": "Heap / Priority Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Heap Sort",
+    "pattern": "Top K Elements",
+    "topic": "Heap / Priority Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Kth Smallest Element",
+    "pattern": "Top K Elements",
+    "topic": "Heap / Priority Queue",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Median from Stream",
+    "pattern": "Two Heaps",
+    "topic": "Heap / Priority Queue",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Smallest Range in K Sorted List",
+    "pattern": "K-way Merge",
+    "topic": "Heap / Priority Queue",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Longest Common Prefix (Trie)",
+    "pattern": "Trie",
+    "topic": "Trie",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Word Break Problem",
+    "pattern": "Trie",
+    "topic": "Trie",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Implement a Phone Directory",
+    "pattern": "Trie",
+    "topic": "Trie",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Implement a Trie",
+    "pattern": "Trie",
+    "topic": "Trie",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Longest String with All Prefix",
+    "pattern": "Trie",
+    "topic": "Trie",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Flood Fill Algorithm",
+    "pattern": "Tree DFS",
+    "topic": "Graph",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "BFS of Graph",
+    "pattern": "Tree BFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "DFS of Graph",
+    "pattern": "Tree DFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Detect Cycle in Undirected using BFS",
+    "pattern": "Tree BFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Detect Cycle in Undirected using DFS",
+    "pattern": "Tree DFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Detect Cycle in Directed using BFS",
+    "pattern": "Tree BFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Detect Cycle in Directed using DFS",
+    "pattern": "Tree DFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Topological Sorting (DFS)",
+    "pattern": "Topological Sort",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Prim's Algorithm (MST)",
+    "pattern": "Greedy",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Bellman Ford Algorithm",
+    "pattern": "Dynamic Programming",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Floyd Warshall Algorithm",
+    "pattern": "Dynamic Programming",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Kosaraju Strongly Connected Components",
+    "pattern": "Topological Sort",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Check Bi-partite Graph",
+    "pattern": "Tree BFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Number of Islands",
+    "pattern": "Tree DFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Rotten Oranges (Graph)",
+    "pattern": "Tree BFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "01 Matrix",
+    "pattern": "Tree BFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Course Schedule I and II",
+    "pattern": "Topological Sort",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Alien Dictionary",
+    "pattern": "Topological Sort",
+    "topic": "Graph",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Cheapest Flights within K Stops",
+    "pattern": "Dynamic Programming",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Clone a Graph",
+    "pattern": "Tree DFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Most Stones Removed",
+    "pattern": "Topological Sort",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Number of Provinces",
+    "pattern": "Tree DFS",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Number of Ways to Arrive at Destination",
+    "pattern": "Dynamic Programming",
+    "topic": "Graph",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Topological Sorting (BFS)",
+    "pattern": "Topological Sort",
+    "topic": "Graph",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Dijkstra's Algorithm",
+    "pattern": "Greedy",
+    "topic": "Graph",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Kruskal's Algorithm (MST)",
+    "pattern": "Greedy",
+    "topic": "Graph",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Buy and Sell Stocks I",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "0-1 Knapsack",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Target Sum Subset",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Unbounded Knapsack",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Coin Change",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Longest Common Subsequence",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Longest Common Substring",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Edit Distance",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Longest Increasing Subsequence",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Palindromic Partitioning (MCM)",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Max Product Subarray",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Unique BSTs",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Longest Palindromic Subsequence",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Buy and Sell Stocks II",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Nth Catalan",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Minimum Partitioning",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Wildcard Pattern Matching",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Rod Cutting",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Egg Dropping",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Longest Bitonic Subsequence",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "MCM (Matrix Chain Multiplication)",
+    "pattern": "0-1 Knapsack",
+    "topic": "Dynamic Programming",
+    "difficulty": "Hard"
+  },
+  {
+    "name": "Assign Cookies",
+    "pattern": "Greedy",
+    "topic": "Greedy",
+    "difficulty": "Easy"
+  },
+  {
+    "name": "Indian Coins",
+    "pattern": "Greedy",
+    "topic": "Greedy",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Fractional Knapsack",
+    "pattern": "Greedy",
+    "topic": "Greedy",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Maximum Length of Pair Chain",
+    "pattern": "Greedy",
+    "topic": "Greedy",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Activity Selection",
+    "pattern": "Greedy",
+    "topic": "Greedy",
+    "difficulty": "Medium"
+  },
+  {
+    "name": "Job Scheduling",
+    "pattern": "Greedy",
+    "topic": "Greedy",
+    "difficulty": "Hard"
+  }
+]

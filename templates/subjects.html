@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subjects</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand"><span class="dot"></span> DSA Tracker</a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/dsa">Problems</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/timetable">Timetable</a>
+    <a href="/roadmap">Roadmap</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-time" id="nav-clock">--:--:--</span>
+    <a href="https://leetcode.com" target="_blank" class="nav-leet">⚔️ LeetCode</a>
+  </div>
+</nav>
+
+<div class="page">
+  <a href="/" class="back-link">← Back</a>
+
+  <div class="section-head">
+    <h2>Core Subjects</h2>
+    <div class="line"></div>
+    <div class="badge">Interview Prep</div>
+  </div>
+
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.5rem;">Click a card to mark as done. Cover all these topics for interview readiness.</p>
+
+  {% set icons  = {'DSA':'🧩','DBMS':'🗄️','Operating Systems':'⚙️','Computer Networks':'🌐','OOPs':'📐','Machine Learning':'🤖'} %}
+  {% set topics = {
+    'DSA': 'Arrays, Trees, Graphs, DP, Sorting',
+    'DBMS': 'Normalization, SQL, Transactions, Indexing',
+    'Operating Systems': 'Scheduling, Memory, Deadlocks, File Systems',
+    'Computer Networks': 'OSI, TCP/IP, HTTP, DNS, Routing',
+    'OOPs': 'Inheritance, Polymorphism, Encapsulation, SOLID',
+    'Machine Learning': 'Supervised, Unsupervised, Neural Nets, Metrics'
+  } %}
+
+  <div class="subjects-grid">
+    {% for s in subjects %}
+    <div class="subject-card {{ 'done' if s.status==1 else '' }}" data-id="{{ s.id }}">
+      <div class="subject-icon">{{ icons.get(s.name,'📚') }}</div>
+      <div>
+        <div class="subject-name">{{ s.name }}</div>
+        <div class="subject-sub">{{ topics.get(s.name,'Core interview topic') }}</div>
+        <div class="subject-status {{ 'status-done' if s.status==1 else 'status-wip' }}">
+          {{ '✓ Completed' if s.status==1 else '● In Progress' }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="section-head" style="margin-top:2.5rem;">
+    <h2>What to Cover Per Subject</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="table-wrap fade-up">
+    <table>
+      <thead>
+        <tr><th>Subject</th><th>Key Interview Topics</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill pill-green">DBMS</span></td>
+          <td style="font-size:0.85rem;color:var(--text2);">ER Diagrams, Normalization (1NF–3NF, BCNF), SQL Queries, Joins, Transactions (ACID), Indexing, B-Trees</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-blue">OS</span></td>
+          <td style="font-size:0.85rem;color:var(--text2);">Process vs Thread, Scheduling (FCFS, SJF, Round Robin), Deadlocks, Paging, Segmentation, Virtual Memory</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-amber">CN</span></td>
+          <td style="font-size:0.85rem;color:var(--text2);">OSI vs TCP/IP, HTTP/HTTPS, DNS, TCP vs UDP, Subnetting, Routing Protocols, 3-Way Handshake</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-red">OOPs</span></td>
+          <td style="font-size:0.85rem;color:var(--text2);">4 Pillars, Abstract vs Interface, SOLID Principles, Design Patterns (Singleton, Factory, Observer)</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-green">ML</span></td>
+          <td style="font-size:0.85rem;color:var(--text2);">Regression, Classification, Overfitting/Underfitting, Bias-Variance, CNN, RNN basics, Evaluation Metrics</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="/static/script.js"></script>
+
+
+<script>
+(function tick(){
+  var el = document.getElementById("nav-clock");
+  if(el){
+    var n=new Date(), h=n.getHours(), m=n.getMinutes(), s=n.getSeconds();
+    var ampm=h>=12?"PM":"AM";
+    h=h%12; h=h?h:12;
+    el.textContent=(h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s)+" "+ampm;
+  }
+  setTimeout(tick,1000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Tracker — Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand"><span class="dot"></span> DSA Tracker</a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/dsa">Problems</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/timetable">Timetable</a>
+    <a href="/roadmap">Roadmap</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-time" id="nav-clock">--:--:--</span>
+    <a href="https://leetcode.com" target="_blank" class="nav-leet">⚔️ LeetCode</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero fade-up">
+    <div class="hero-tag">🎯 90-Day Interview Prep — Mar 9 – Jun 6, 2026</div>
+    <h1>Your DSA<br><em>Command Center</em></h1>
+    <p class="hero-sub">Stay consistent. Ship the algo. Land the offer.</p>
+  </div>
+
+  {% if not started %}
+  <!-- PRE-START COUNTDOWN BANNER -->
+  <div style="background:linear-gradient(135deg,var(--accent-lt),#d1fae5);border:1.5px solid rgba(26,122,74,0.3);border-radius:var(--r);padding:1.5rem 1.8rem;margin:1.5rem 0;display:flex;align-items:center;gap:1.2rem;box-shadow:var(--shadow);">
+    <div style="font-size:2.2rem;">⏳</div>
+    <div>
+      <div style="font-family:'Fraunces',serif;font-weight:800;font-size:1.1rem;color:var(--accent);">
+        Prep starts in <span style="font-size:1.6rem;">{{ days_until_start }}</span> day{{ 's' if days_until_start != 1 else '' }}
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);margin-top:4px;">
+        Kicks off March 9, 2026 at 5:30 AM · Use this time to revise basics & set up your environment
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="stats-grid">
+    <div class="stat-card green fade-up">
+      <div class="stat-label">Problems Solved</div>
+      <div class="stat-value"><span id="solved-count">{{ solved }}</span><span class="unit">/{{ total }}</span></div>
+    </div>
+    <div class="stat-card blue fade-up">
+      <div class="stat-label">Current Day</div>
+      {% if started %}
+        <div class="stat-value">{{ day }}<span class="unit">/90</span></div>
+      {% else %}
+        <div class="stat-value" style="font-size:1.1rem;color:var(--muted);padding-top:0.4rem;">Starts Mar 9</div>
+      {% endif %}
+    </div>
+    <div class="stat-card amber fade-up">
+      <div class="stat-label">Day Streak 🔥</div>
+      {% if started %}
+        <div class="stat-value">{{ streak }}<span class="unit"> days</span></div>
+      {% else %}
+        <div class="stat-value" style="font-size:1.1rem;color:var(--muted);padding-top:0.4rem;">Not started</div>
+      {% endif %}
+    </div>
+    <div class="stat-card red fade-up">
+      <div class="stat-label">Days Left</div>
+      {% if started %}
+        <div class="stat-value">{{ 90 - day }}<span class="unit"> days</span></div>
+      {% else %}
+        <div class="stat-value">90<span class="unit"> days</span></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="progress-wrap fade-up">
+    <div class="progress-header">
+      <span class="progress-title">Overall Progress</span>
+      <span class="progress-pct">{{ ((solved / total) * 100) | round(1) if total > 0 else 0 }}%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" data-pct="{{ ((solved / total) * 100) | round(1) if total > 0 else 0 }}" style="width:0%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-top:0.5rem;font-family:'DM Mono',monospace;">
+      <span>Mar 9, 2026</span><span>Jun 6, 2026</span>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h2>Today's Focus</h2>
+    <div class="line"></div>
+    <div class="badge">Daily</div>
+  </div>
+
+  <div class="tasks-grid">
+    <div class="task-item fade-up"><span class="task-icon">⚡</span><span>Solve <strong>2+ DSA problems</strong> on LeetCode</span></div>
+    <div class="task-item fade-up"><span class="task-icon">📐</span><span>Study <strong>1 new pattern</strong> with notes</span></div>
+    <div class="task-item fade-up"><span class="task-icon">📖</span><span>Revise <strong>1 core subject</strong> topic</span></div>
+    <div class="task-item fade-up"><span class="task-icon">🔁</span><span><strong>Review yesterday's</strong> problems</span></div>
+  </div>
+
+  <div class="section-head">
+    <h2>Roadmap Phases</h2>
+    <div class="line"></div>
+    <div class="badge">5 Phases · 90 Days</div>
+  </div>
+
+  <div class="phases">
+    <div class="phase-card fade-up" style="border-top:3px solid var(--accent);">
+      <div class="phase-title">Phase 1 — Foundations</div>
+      <div class="phase-range">D1–D20 · Mar 9–28</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.9;margin-bottom:0.6rem;">
+        D1–3 &nbsp;· Algo Thinking + Complexity<br>
+        D4–7 &nbsp;· Arrays<br>
+        D8–10 · Binary Search<br>
+        D11–14 · Strings<br>
+        D15–20 · Linked List
+      </div>
+      <div class="progress-track" style="margin-top:0.75rem;">
+        <div class="progress-fill" data-pct="0" style="width:0%;background:linear-gradient(90deg,var(--accent),#34d399)"></div>
+      </div>
+    </div>
+    <div class="phase-card fade-up" style="border-top:3px solid var(--accent2);">
+      <div class="phase-title">Phase 2 — Core Structures</div>
+      <div class="phase-range">D21–D35 · Mar 29–Apr 12</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.9;margin-bottom:0.6rem;">
+        D21–25 · Stack<br>
+        D26–30 · Queue<br>
+        D31–35 · Hash Tables
+      </div>
+      <div class="progress-track" style="margin-top:0.75rem;">
+        <div class="progress-fill" data-pct="0" style="width:0%;background:linear-gradient(90deg,var(--accent2),#818cf8)"></div>
+      </div>
+    </div>
+    <div class="phase-card fade-up" style="border-top:3px solid var(--warn);">
+      <div class="phase-title">Phase 3 — Important Patterns</div>
+      <div class="phase-range">D36–D55 · Apr 13–May 2</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.9;margin-bottom:0.6rem;">
+        D36–40 · Recursion<br>
+        D41–45 · Backtracking<br>
+        D46–50 · Sorting Algorithms<br>
+        D51–55 · Heap / Priority Queue
+      </div>
+      <div class="progress-track" style="margin-top:0.75rem;">
+        <div class="progress-fill" data-pct="0" style="width:0%;background:linear-gradient(90deg,var(--warn),#f59e0b)"></div>
+      </div>
+    </div>
+    <div class="phase-card fade-up" style="border-top:3px solid var(--accent3);">
+      <div class="phase-title">Phase 4 — Trees + Graphs</div>
+      <div class="phase-range">D56–D75 · May 3–22</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.9;margin-bottom:0.6rem;">
+        D56–65 · Trees<br>
+        D66–70 · Trie<br>
+        D71–75 · Graph Basics
+      </div>
+      <div class="progress-track" style="margin-top:0.75rem;">
+        <div class="progress-fill" data-pct="0" style="width:0%;background:linear-gradient(90deg,var(--accent3),#fb923c)"></div>
+      </div>
+    </div>
+    <div class="phase-card fade-up" style="border-top:3px solid #7e22ce;">
+      <div class="phase-title">Phase 5 — Advanced Algorithms</div>
+      <div class="phase-range">D76–D90 · May 23–Jun 6</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.9;margin-bottom:0.6rem;">
+        D76–80 · Graph Algorithms<br>
+        D81–86 · Dynamic Programming<br>
+        D87–90 · Mock Interviews + Revision
+      </div>
+      <div class="progress-track" style="margin-top:0.75rem;">
+        <div class="progress-fill" data-pct="0" style="width:0%;background:linear-gradient(90deg,#7e22ce,#a855f7)"></div>
+      </div>
+    </div>
+  </div>
+<script src="/static/script.js"></script>
+<script>
+(function tick(){
+  var el = document.getElementById("nav-clock");
+  if(el){
+    var n=new Date(), h=n.getHours(), m=n.getMinutes(), s=n.getSeconds();
+    var ampm=h>=12?"PM":"AM";
+    h=h%12; h=h?h:12;
+    el.textContent=(h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s)+" "+ampm;
+  }
+  setTimeout(tick,1000);
+})();
+</script>
+</body>
+</html>
