@@ -23,6 +23,20 @@ def get_current_day():
 def get_db():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
+    # Auto-add new columns if they don't exist (safe migrations)
+    try:
+        conn.execute("ALTER TABLE meta ADD COLUMN longest_streak INTEGER DEFAULT 0")
+        conn.commit()
+    except Exception:
+        pass  # column already exists
+    try:
+        conn.execute("""CREATE TABLE IF NOT EXISTS daily_progress (
+            date  TEXT PRIMARY KEY,
+            count INTEGER DEFAULT 0
+        )""")
+        conn.commit()
+    except Exception:
+        pass
     return conn
 
 def sync_day(conn):
