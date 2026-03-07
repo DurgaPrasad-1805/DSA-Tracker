@@ -23,20 +23,22 @@ def get_current_day():
 def get_db():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
-    # Auto-add new columns if they don't exist (safe migrations)
-    try:
-        conn.execute("ALTER TABLE meta ADD COLUMN longest_streak INTEGER DEFAULT 0")
-        conn.commit()
-    except Exception:
-        pass  # column already exists
-    try:
-        conn.execute("""CREATE TABLE IF NOT EXISTS daily_progress (
+
+    # Safe migrations — never crash if columns/tables already exist
+    migrations = [
+        "ALTER TABLE meta ADD COLUMN longest_streak INTEGER DEFAULT 0",
+        """CREATE TABLE IF NOT EXISTS daily_progress (
             date  TEXT PRIMARY KEY,
             count INTEGER DEFAULT 0
-        )""")
-        conn.commit()
-    except Exception:
-        pass
+        )""",
+    ]
+    for sql in migrations:
+        try:
+            conn.execute(sql)
+            conn.commit()
+        except Exception:
+            pass
+
     return conn
 
 def sync_day(conn):
@@ -44,38 +46,37 @@ def sync_day(conn):
     conn.execute("UPDATE meta SET day_number=? WHERE id=1", (day,))
     return day
 
-def get_days_until_start():
-    return (START_DATE - get_study_date()).days
-
 # ── Routes ───────────────────────────────────────────────────────────────────
 
 @app.route("/")
 def home():
-    conn   = get_db()
-    solved = conn.execute("SELECT COUNT(*) FROM problems WHERE status=1").fetchone()[0]
-    total  = conn.execute("SELECT COUNT(*) FROM problems").fetchone()[0]
-    meta   = conn.execute("SELECT streak, longest_streak FROM meta WHERE id=1").fetchone()
+    try:
+        conn   = get_db()
+        solved = conn.execute("SELECT COUNT(*) FROM problems WHERE status=1").fetchone()[0]
+        total  = conn.execute("SELECT COUNT(*) FROM problems").fetchone()[0]
+        meta   = conn.execute("SELECT streak, longest_streak FROM meta WHERE id=1").fetchone()
 
-    study_date = get_study_date()
-    days_until_start = (START_DATE - study_date).days
+        study_date       = get_study_date()
+        days_until_start = (START_DATE - study_date).days
+        streak           = meta["streak"]        if meta else 0
+        longest_streak   = meta["longest_streak"] if meta else 0
 
-    streak         = meta["streak"] if meta else 0
-    longest_streak = meta["longest_streak"] if meta else 0
-
-    if days_until_start > 0:
-        conn.close()
-        return render_template("index.html",
-            solved=solved, total=total,
-            streak=0, longest_streak=0,
-            day=0, days_until_start=days_until_start, started=False)
-    else:
-        day = sync_day(conn)
-        conn.commit()
-        conn.close()
-        return render_template("index.html",
-            solved=solved, total=total,
-            streak=streak, longest_streak=longest_streak,
-            day=day, days_until_start=0, started=True)
+        if days_until_start > 0:
+            conn.close()
+            return render_template("index.html",
+                solved=solved, total=total,
+                streak=0, longest_streak=0,
+                day=0, days_until_start=days_until_start, started=False)
+        else:
+            day = sync_day(conn)
+            conn.commit()
+            conn.close()
+            return render_template("index.html",
+                solved=solved, total=total,
+                streak=streak, longest_streak=longest_streak,
+                day=day, days_until_start=0, started=True)
+    except Exception as e:
+        return f"<h2>Error in home route</h2><pre>{e}</pre>", 500
 
 @app.route("/dsa")
 def dsa():
@@ -118,30 +119,21 @@ def toggle_problem(pid):
         study_today = get_study_date().isoformat()
 
         if new_status == 1:
-            # Log to daily_progress
             conn.execute("""
                 INSERT INTO daily_progress(date, count) VALUES(?,1)
                 ON CONFLICT(date) DO UPDATE SET count=count+1
             """, (study_today,))
-
-            # Update streak
             meta = conn.execute("SELECT last_active, streak, longest_streak FROM meta WHERE id=1").fetchone()
             if meta and meta["last_active"] != study_today:
-                yesterday = (get_study_date() - timedelta(days=1)).isoformat()
-                if meta["last_active"] == yesterday:
-                    new_streak = meta["streak"] + 1
-                else:
-                    new_streak = 1
+                yesterday  = (get_study_date() - timedelta(days=1)).isoformat()
+                new_streak = (meta["streak"] + 1) if meta["last_active"] == yesterday else 1
                 new_longest = max(new_streak, meta["longest_streak"] or 0)
                 conn.execute(
                     "UPDATE meta SET last_active=?, streak=?, longest_streak=? WHERE id=1",
                     (study_today, new_streak, new_longest)
                 )
         else:
-            # Unsolving — decrement daily count (min 0)
-            conn.execute("""
-                UPDATE daily_progress SET count=MAX(0,count-1) WHERE date=?
-            """, (study_today,))
+            conn.execute("UPDATE daily_progress SET count=MAX(0,count-1) WHERE date=?", (study_today,))
 
         conn.commit()
         solved = conn.execute("SELECT COUNT(*) FROM problems WHERE status=1").fetchone()[0]
@@ -149,7 +141,8 @@ def toggle_problem(pid):
         conn.close()
         return jsonify({
             "ok": True, "status": new_status, "solved": solved,
-            "streak": meta["streak"], "longest_streak": meta["longest_streak"]
+            "streak": meta["streak"] if meta else 0,
+            "longest_streak": meta["longest_streak"] if meta else 0
         })
     conn.close()
     return jsonify({"ok": False}), 404
@@ -185,11 +178,9 @@ def toggle_day(day_num):
 
 @app.route("/api/weekly_progress")
 def weekly_progress():
-    """Returns problems solved per week (Week 1, Week 2, ...) since START_DATE."""
     conn = get_db()
     rows = conn.execute("SELECT date, count FROM daily_progress ORDER BY date").fetchall()
     conn.close()
-
     weekly = {}
     for row in rows:
         d = date.fromisoformat(row["date"])
@@ -197,19 +188,15 @@ def weekly_progress():
         if delta < 0:
             continue
         week_num = delta // 7 + 1
-        if week_num > 13:  # cap at 13 weeks (91 days)
+        if week_num > 13:
             continue
         label = f"W{week_num}"
         weekly[label] = weekly.get(label, 0) + row["count"]
-
-    # Fill in all weeks 1-13 with 0 if no data
     all_weeks = [f"W{i}" for i in range(1, 14)]
-    result = [{"week": w, "count": weekly.get(w, 0)} for w in all_weeks]
-    return jsonify(result)
+    return jsonify([{"week": w, "count": weekly.get(w, 0)} for w in all_weeks])
 
 @app.route("/api/daily_counts")
 def daily_counts():
-    """Returns dict of date -> count for heatmap."""
     conn = get_db()
     rows = conn.execute("SELECT date, count FROM daily_progress").fetchall()
     conn.close()
