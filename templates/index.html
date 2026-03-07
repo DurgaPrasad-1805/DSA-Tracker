@@ -60,7 +60,8 @@
     <div class="stat-card amber fade-up">
       <div class="stat-label">Day Streak 🔥</div>
       {% if started %}
-        <div class="stat-value">{{ streak }}<span class="unit"> days</span></div>
+        <div class="stat-value" id="streak-val">{{ streak }}<span class="unit"> days</span></div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:4px;">Best: <span id="longest-val">{{ longest_streak }}</span> days</div>
       {% else %}
         <div class="stat-value" style="font-size:1.1rem;color:var(--muted);padding-top:0.4rem;">Not started</div>
       {% endif %}
@@ -99,6 +100,69 @@
     <div class="task-item fade-up"><span class="task-icon">📐</span><span>Study <strong>1 new pattern</strong> with notes</span></div>
     <div class="task-item fade-up"><span class="task-icon">📖</span><span>Revise <strong>1 core subject</strong> topic</span></div>
     <div class="task-item fade-up"><span class="task-icon">🔁</span><span><strong>Review yesterday's</strong> problems</span></div>
+  </div>
+
+  <!-- ── Streak Tracker ─────────────────────────────────────── -->
+  <div class="section-head">
+    <h2>Streak Tracker</h2>
+    <div class="line"></div>
+    <div class="badge">🔥 Gamify Your Practice</div>
+  </div>
+
+  <div class="streak-panel fade-up">
+    <div class="streak-stat">
+      <div class="streak-num" id="streak-current">{{ streak if started else 0 }}</div>
+      <div class="streak-lbl">Current Streak</div>
+      <div class="streak-sub">days in a row</div>
+    </div>
+    <div class="streak-divider"></div>
+    <div class="streak-stat">
+      <div class="streak-num best" id="streak-longest">{{ longest_streak if started else 0 }}</div>
+      <div class="streak-lbl">Longest Streak</div>
+      <div class="streak-sub">personal best</div>
+    </div>
+    <div class="streak-divider"></div>
+    <div class="streak-stat">
+      <div class="streak-num blue">{{ solved }}</div>
+      <div class="streak-lbl">Total Solved</div>
+      <div class="streak-sub">out of {{ total }}</div>
+    </div>
+    <div class="streak-divider"></div>
+    <div class="streak-stat">
+      <div class="streak-num purple">{{ ((solved/total)*100)|round(1) if total>0 else 0 }}%</div>
+      <div class="streak-lbl">Completion</div>
+      <div class="streak-sub">problems done</div>
+    </div>
+  </div>
+
+  <!-- Streak calendar heatmap - last 30 days -->
+  <div class="streak-heat-wrap fade-up">
+    <div style="font-family:'DM Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.75rem;">Activity — Last 30 Days</div>
+    <div class="streak-heat" id="streak-heat"></div>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted2);">
+      <span>Less</span>
+      <div style="width:12px;height:12px;border-radius:3px;background:var(--border);"></div>
+      <div style="width:12px;height:12px;border-radius:3px;background:#bbf7d0;"></div>
+      <div style="width:12px;height:12px;border-radius:3px;background:#4ade80;"></div>
+      <div style="width:12px;height:12px;border-radius:3px;background:#16a34a;"></div>
+      <div style="width:12px;height:12px;border-radius:3px;background:#14532d;"></div>
+      <span>More</span>
+    </div>
+  </div>
+
+  <!-- ── Progress Graph ───────────────────────────────────────── -->
+  <div class="section-head">
+    <h2>Progress Graph</h2>
+    <div class="line"></div>
+    <div class="badge">📊 Weekly Breakdown</div>
+  </div>
+
+  <div class="chart-wrap fade-up">
+    <canvas id="weeklyChart" height="90"></canvas>
+    <div class="chart-empty" id="chart-empty">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">📊</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);">Data starts building from Day 1 (Mar 9)</div>
+    </div>
   </div>
 
   <div class="section-head">
@@ -172,7 +236,119 @@
       </div>
     </div>
   </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="/static/script.js"></script>
+<script>
+// ── Weekly Progress Chart ─────────────────────────────────
+async function initChart() {
+  const res  = await fetch('/api/weekly_progress');
+  const data = await res.json();
+  const hasData = data.some(d => d.count > 0);
+  const emptyEl = document.getElementById('chart-empty');
+  const canvas  = document.getElementById('weeklyChart');
+  if (!hasData) {
+    canvas.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'flex';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+  canvas.style.display = 'block';
+
+  const labels = data.map(d => d.week);
+  const counts = data.map(d => d.count);
+  const maxVal = Math.max(...counts, 1);
+
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Problems Solved',
+        data: counts,
+        backgroundColor: counts.map(c => {
+          const alpha = c === 0 ? 0.08 : 0.15 + (c / maxVal) * 0.7;
+          return `rgba(26,122,74,${alpha})`;
+        }),
+        borderColor: counts.map(c => c === 0 ? 'rgba(26,122,74,0.15)' : 'rgba(26,122,74,0.8)'),
+        borderWidth: 1.5,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1c1917',
+          titleFont: { family: 'DM Mono, monospace', size: 11 },
+          bodyFont:  { family: 'Nunito, sans-serif', size: 13 },
+          callbacks: {
+            title: ctx => ctx[0].label.replace('W', 'Week '),
+            label: ctx => ` ${ctx.raw} problem${ctx.raw !== 1 ? 's' : ''} solved`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { family: 'DM Mono, monospace', size: 10 },
+            color: '#78716c'
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: {
+            font: { family: 'DM Mono, monospace', size: 10 },
+            color: '#78716c',
+            stepSize: 1,
+            precision: 0
+          }
+        }
+      }
+    }
+  });
+}
+initChart();
+
+// ── Streak Heatmap (last 30 days) ─────────────────────────
+async function initHeatmap() {
+  const res  = await fetch('/api/weekly_progress');
+  // Fetch raw daily data via a separate endpoint
+  const heatEl = document.getElementById('streak-heat');
+  if (!heatEl) return;
+
+  // Build last 30 days from today
+  const today = new Date();
+  const days = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().split('T')[0]);
+  }
+
+  // Fetch daily counts
+  const r2   = await fetch('/api/daily_counts');
+  const data = await r2.json(); // { "2026-03-09": 5, ... }
+
+  heatEl.innerHTML = '';
+  days.forEach(dateStr => {
+    const count = data[dateStr] || 0;
+    const cell  = document.createElement('div');
+    cell.className = 'heat-cell';
+    cell.title = `${dateStr}: ${count} problem${count !== 1 ? 's' : ''}`;
+    if (count === 0)       cell.style.background = 'var(--border)';
+    else if (count <= 2)   cell.style.background = '#bbf7d0';
+    else if (count <= 4)   cell.style.background = '#4ade80';
+    else if (count <= 7)   cell.style.background = '#16a34a';
+    else                   cell.style.background = '#14532d';
+    heatEl.appendChild(cell);
+  });
+}
+initHeatmap();
+</script>
 <script>
 (function tick(){
   var el = document.getElementById("nav-clock");

@@ -34,6 +34,16 @@ CREATE TABLE IF NOT EXISTS meta (
 )""")
 
 cursor.execute("""
+CREATE TABLE IF NOT EXISTS daily_progress (
+    date  TEXT PRIMARY KEY,
+    count INTEGER DEFAULT 0
+)""")
+
+cursor.execute("""
+ALTER TABLE meta ADD COLUMN longest_streak INTEGER DEFAULT 0
+""") if "longest_streak" not in [r[1] for r in cursor.execute("PRAGMA table_info(meta)").fetchall()] else None
+
+cursor.execute("""
 CREATE TABLE IF NOT EXISTS roadmap_days (
     day_number INTEGER PRIMARY KEY,
     phase      INTEGER,
