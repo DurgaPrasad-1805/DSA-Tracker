@@ -4,7 +4,7 @@ from datetime import datetime, date, timedelta
 
 app = Flask(__name__)
 
-START_DATE      = date(2026, 3, 9)
+START_DATE      = date(2026, 3, 8)
 ROLLOVER_HOUR   = 5
 ROLLOVER_MINUTE = 30
 
