@@ -34,8 +34,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.97);backdrop
 .nav-links a{font-family:'DM Mono',monospace;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);text-decoration:none;padding:10px 18px;border-radius:8px;transition:color 0.15s,background 0.15s;font-weight:500;}
 .nav-links a:hover,.nav-links a.active{color:var(--accent);background:var(--accent-lt);}
 .nav-right{display:flex;align-items:center;gap:12px;justify-content:flex-end;flex-wrap:nowrap;}
-.nav-time{font-family:'DM Mono',monospace;font-size:0.9rem;font-weight:500;color:var(--text);background:var(--surface2);border:1.5px solid var(--border2);padding:11px 18px;border-radius:8px;letter-spacing:0.06em;min-width:130px;text-align:center;display:flex;align-items:center;justify-content:center;}
-.nav-leet{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;text-decoration:none;background:var(--accent);color:#fff;padding:11px 22px;border-radius:8px;transition:background 0.15s;display:flex;align-items:center;gap:7px;}
+.nav-time{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:500;color:var(--text);background:var(--surface2);border:1.5px solid var(--border2);padding:11px 22px;border-radius:8px;letter-spacing:0.06em;min-width:130px;text-align:center;display:flex;align-items:center;justify-content:center;height:44px;box-sizing:border-box;}
+.nav-leet{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;text-decoration:none;background:var(--accent);color:#fff;padding:11px 22px;border-radius:8px;transition:background 0.15s;display:flex;align-items:center;gap:7px;height:44px;box-sizing:border-box;}
 .nav-leet:hover{background:#155f3a;}
 
 .page{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:2.5rem 3rem;}
