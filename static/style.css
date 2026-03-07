@@ -393,3 +393,82 @@ a {
     }
   
   }
+
+  /* ============================= */
+/* MOBILE NAVBAR FIX */
+/* ============================= */
+
+@media (max-width: 900px){
+
+  nav{
+  grid-template-columns:1fr;
+  height:auto;
+  padding:12px;
+  gap:10px;
+  text-align:center;
+  }
+  
+  /* logo */
+  
+  .nav-brand{
+  justify-self:center;
+  }
+  
+  /* menu links */
+  
+  .nav-links{
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+  }
+  
+  /* clock + leetcode button */
+  
+  .nav-actions{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  }
+  
+  .clock-box{
+  font-size:14px;
+  padding:6px 10px;
+  }
+  
+  .leetcode-btn{
+  padding:6px 10px;
+  font-size:13px;
+  }
+  
+  }
+  
+  /* ============================= */
+  /* SMALL PHONE FIX */
+  /* ============================= */
+  
+  @media (max-width: 600px){
+  
+  .nav-links{
+  flex-direction:column;
+  align-items:center;
+  }
+  
+  .nav-links a{
+  width:100%;
+  text-align:center;
+  padding:8px;
+  }
+  
+  .leetcode-btn{
+  width:100%;
+  max-width:200px;
+  }
+  
+  .clock-box{
+  width:100%;
+  max-width:200px;
+  text-align:center;
+  }
+  
+  }
