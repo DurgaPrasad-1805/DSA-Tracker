@@ -309,3 +309,87 @@ a {
   }
 
 }
+
+/* ===============================
+   MOBILE RESPONSIVE FIXES
+   =============================== */
+
+   @media (max-width: 900px){
+
+    nav{
+      grid-template-columns:1fr;
+      height:auto;
+      padding:12px 16px;
+      gap:10px;
+      text-align:center;
+    }
+  
+    .nav-links{
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:6px;
+    }
+  
+    .nav-links a{
+      font-size:0.7rem;
+      padding:8px 10px;
+    }
+  
+  }
+  
+  /* Smaller phones */
+  
+  @media (max-width: 600px){
+  
+    body{
+      font-size:15px;
+    }
+  
+    nav{
+      padding:10px;
+    }
+  
+    .nav-brand{
+      font-size:1.2rem;
+    }
+  
+    .nav-links{
+      gap:4px;
+    }
+  
+    .nav-links a{
+      padding:6px 8px;
+      font-size:0.65rem;
+    }
+  
+    /* Tables scroll instead of breaking layout */
+  
+    table{
+      display:block;
+      overflow-x:auto;
+      white-space:nowrap;
+    }
+  
+    /* Cards and containers */
+  
+    .container{
+      padding:10px;
+    }
+  
+  }
+  
+  /* Very small devices */
+  
+  @media (max-width: 420px){
+  
+    .nav-links{
+      flex-direction:column;
+      align-items:center;
+    }
+  
+    .nav-links a{
+      width:100%;
+      text-align:center;
+    }
+  
+  }
