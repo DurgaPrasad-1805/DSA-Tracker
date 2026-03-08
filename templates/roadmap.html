@@ -192,6 +192,35 @@
     .phase-num.p3 { color: var(--warn); }
     .phase-num.p4 { color: var(--accent3); }
     .phase-num.p5 { color: #7e22ce; }
+
+    .watch-btn{
+      font-family:'DM Mono',monospace;
+      font-size:0.62rem;font-weight:600;
+      text-transform:uppercase;letter-spacing:0.08em;
+      color:#fff;background:#cc0000;
+      text-decoration:none;
+      padding:3px 10px;border-radius:5px;
+      margin-left:auto;
+      display:inline-flex;align-items:center;gap:5px;
+      transition:background 0.15s;
+      white-space:nowrap;
+    }
+    .watch-btn:hover{background:#aa0000;}
+    .video-list{
+      padding:0.5rem 1.4rem 0.7rem;
+      background:#fafaf8;
+      border-top:1px solid var(--border);
+      display:flex;flex-wrap:wrap;gap:6px;
+    }
+    .vid-chip{
+      font-family:'DM Mono',monospace;font-size:0.65rem;
+      color:var(--accent2);background:#eff6ff;
+      border:1px solid #bfdbfe;border-radius:5px;
+      padding:3px 9px;text-decoration:none;
+      transition:background 0.12s;
+      white-space:nowrap;
+    }
+    .vid-chip:hover{background:#dbeafe;}
   </style>
 </head>
 <body>
@@ -203,6 +232,7 @@
     <a href="/subjects">Subjects</a>
     <a href="/timetable">Timetable</a>
     <a href="/roadmap">Roadmap</a>
+    <a href="https://youtube.com/playlist?list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt" target="_blank" class="nav-playlist">&#9654; Playlist</a>
   </div>
   <div class="nav-right">
     <span class="nav-time" id="nav-clock">--:--:--</span>
@@ -278,12 +308,79 @@
         {% set t_last     = topic_days[-1].day_number %}
         {% set t_done     = topic_days | selectattr('status','equalto',1) | list | length %}
 
+        {% set vid_chips = {
+          'Algorithmic Thinking + Complexity': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=1', 'L1: Flowchart'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=2', 'L2: Variables & Operators'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=3', 'L3: Conditionals'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=12','L12: Time & Space Complexity')
+          ],
+          'Arrays': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=8', 'L8: Arrays Intro'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=9', 'L9: Vectors'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=10','L10: Kadane's'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=11','L11: Moore's Voting'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=13','L13: Buy & Sell Stock'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=14','L14: Container Water'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=15','L15: Product Except Self'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=34','L34: 2D Arrays 1'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=35','L35: 2D Arrays 2'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=37','L37: 2 Sum'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=38','L38: 3 Sum')
+          ],
+          'Binary Search': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=17','L17: Binary Search'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=18','L18: Rotated Sorted Array'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=19','L19: Mountain Array'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=20','L20: Single Elem Sorted'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=21','L21: Book Allocation'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=22','L22: Painter's Partition'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=23','L23: Aggressive Cows')
+          ],
+          'Strings': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=28','L28: Strings 1'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=29','L29: Strings 2'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=30','L30: Strings 3'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=31','L31: Strings 4'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=32','L32: Strings 5')
+          ],
+          'Linked List': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=16','L16: Pointers'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=33','L33: Maths for DSA')
+          ],
+          'Stack': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=27','L27: C++ STL')
+          ],
+          'Queue': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=24','L24: Sorting'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=25','L25: DNF Sort'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=26','L26: Merge Sort')
+          ],
+          'Hash Tables': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=6', 'L6: Binary System'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=7', 'L7: Bitwise Operators')
+          ],
+          'Recursion': [
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=4', 'L4: Patterns'),
+            ('https://www.youtube.com/watch?v=VTLCoHnyACE&list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt&index=5', 'L5: Functions')
+          ]
+        } %}
+        {% set chips = vid_chips.get(topic, []) %}
+        {% set pl_url = 'https://youtube.com/playlist?list=PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt' %}
         <div class="topic-group">
           <div class="topic-group-header">
             <span class="topic-group-name">{{ topic }}</span>
             <span class="topic-day-range">D{{ t_first }}–D{{ t_last }}</span>
             <span style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--accent);margin-left:10px;">{{ t_done }}/{{ topic_days|length }}</span>
+            <a href="{{ chips[0][0] if chips else pl_url }}" target="_blank" class="watch-btn">&#9654; Watch on YT</a>
           </div>
+          {% if chips %}
+          <div class="video-list">
+            {% for url, label in chips %}
+            <a href="{{ url }}" target="_blank" class="vid-chip">{{ label }}</a>
+            {% endfor %}
+          </div>
+          {% endif %}
           <div class="day-grid">
             {% for d in topic_days %}
             <div class="day-box {{ 'done' if d.status==1 else '' }}" data-day="{{ d.day_number }}" onclick="toggleDay(this)">
