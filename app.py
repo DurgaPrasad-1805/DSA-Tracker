@@ -34,6 +34,10 @@ def get_db():
             date  TEXT PRIMARY KEY,
             count INTEGER DEFAULT 0
         )""",
+        """CREATE TABLE IF NOT EXISTS video_watched (
+            video_key TEXT PRIMARY KEY,
+            watched   INTEGER DEFAULT 0
+        )""",
     ]
     for sql in migrations:
         try:
@@ -54,10 +58,11 @@ def sync_day(conn):
 @app.route("/")
 def home():
     try:
-        conn   = get_db()
-        solved = conn.execute("SELECT COUNT(*) FROM problems WHERE status=1").fetchone()[0]
-        total  = conn.execute("SELECT COUNT(*) FROM problems").fetchone()[0]
-        meta   = conn.execute("SELECT streak, longest_streak FROM meta WHERE id=1").fetchone()
+        conn        = get_db()
+        solved      = conn.execute("SELECT COUNT(*) FROM problems WHERE status=1").fetchone()[0]
+        total       = conn.execute("SELECT COUNT(*) FROM problems").fetchone()[0]
+        vid_watched = conn.execute("SELECT COUNT(*) FROM video_watched WHERE watched=1").fetchone()[0]
+        meta        = conn.execute("SELECT streak, longest_streak FROM meta WHERE id=1").fetchone()
 
         study_date       = get_study_date()
         days_until_start = (START_DATE - study_date).days
@@ -67,7 +72,7 @@ def home():
         if days_until_start > 0:
             conn.close()
             return render_template("index.html",
-                solved=solved, total=total,
+                solved=solved, total=total, vid_watched=vid_watched,
                 streak=0, longest_streak=0,
                 day=0, days_until_start=days_until_start, started=False)
         else:
@@ -75,7 +80,7 @@ def home():
             conn.commit()
             conn.close()
             return render_template("index.html",
-                solved=solved, total=total,
+                solved=solved, total=total, vid_watched=vid_watched,
                 streak=streak, longest_streak=longest_streak,
                 day=day, days_until_start=0, started=True)
     except Exception as e:

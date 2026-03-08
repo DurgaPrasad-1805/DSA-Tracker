@@ -505,3 +505,6 @@ a {
 /* Playlist nav button */
 .nav-playlist{font-family:'DM Mono',monospace;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;color:#fff !important;background:#cc0000;text-decoration:none;padding:7px 14px;border-radius:8px;transition:background 0.15s;font-weight:600;}
 .nav-playlist:hover{background:#aa0000;}
+
+.stat-card.purple{border-bottom-color:#7e22ce;}
+.stat-card.purple .stat-value{color:#7e22ce;}
