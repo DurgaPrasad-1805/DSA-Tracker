@@ -1,8 +1,8 @@
-# 🚀 DSA Tracker – 90 Day Coding Journey
+# DSA Tracker – 90 Day Coding Journey
 
-A full-stack web application designed to track daily Data Structures and Algorithms (DSA) practice through a structured **90-day roadmap**.
+A full-stack web application designed to track my daily Data Structures and Algorithms (DSA) practice through a structured **90-day roadmap**.
 
-The platform allows users to monitor their learning progress, track solved problems, maintain streaks, and visualize performance using interactive charts.
+The platform allows me to monitor my learning progress, track solved problems, maintain streaks, and visualize performance using interactive charts.
 
 Live Website:
 https://dsa-tracker-cuee.onrender.com
@@ -11,7 +11,7 @@ https://dsa-tracker-cuee.onrender.com
 
 # 📌 Features
 
-## 📊 Progress Tracking
+## Progress Tracking
 
 Track solved DSA problems across multiple topics including:
 
@@ -25,7 +25,7 @@ Track solved DSA problems across multiple topics including:
 
 ---
 
-## 🗺️ 90-Day Structured Roadmap
+## 90-Day Structured Roadmap
 
 The learning journey is divided into **5 phases**:
 
@@ -65,7 +65,7 @@ The learning journey is divided into **5 phases**:
 
 ---
 
-## 🔥 Streak Tracker
+## Streak Tracker
 
 Motivates consistent practice by tracking:
 
@@ -74,7 +74,7 @@ Motivates consistent practice by tracking:
 
 ---
 
-## 📈 Weekly Progress Graph
+## Weekly Progress Graph
 
 Visualizes problem-solving progress using **Chart.js**.
 
@@ -86,7 +86,7 @@ Week 3 → 27 problems
 
 ---
 
-## 📱 Mobile Responsive UI
+## Mobile Responsive UI
 
 The application is optimized for:
 
@@ -94,11 +94,11 @@ The application is optimized for:
 * Mobile devices
 * Tablets
 
-Users can track progress from anywhere.
+I can track progress from anywhere.
 
 ---
 
-# 🛠️ Tech Stack
+# Tech Stack
 
 Frontend:
 
@@ -128,7 +128,7 @@ Version Control:
 
 ---
 
-# 📂 Project Structure
+# Project Structure
 
 ```
 DSA-Tracker
@@ -152,7 +152,7 @@ DSA-Tracker
 
 ---
 
-# ⚙️ How to Run Locally
+# How to Run Locally
 
 Clone the repository:
 
@@ -175,7 +175,7 @@ pip install flask gunicorn
 Run the application:
 
 ```
-python app.py
+python3 app.py
 ```
 
 Open in browser:
@@ -186,7 +186,7 @@ http://localhost:5000
 
 ---
 
-# 🌐 Deployment
+# Deployment
 
 The project is deployed using **Render Cloud Platform**.
 
@@ -198,11 +198,11 @@ Every push to the repository automatically redeploys the application.
 
 ---
 
-# 🎯 Purpose of the Project
+# Purpose of the Project
 
 This project was built to:
 
-* Track daily DSA practice
+* Track my daily DSA practice
 * Improve consistency in problem solving
 * Visualize coding progress
 * Provide a structured roadmap for mastering DSA
