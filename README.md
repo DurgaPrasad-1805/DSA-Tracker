@@ -25,6 +25,56 @@ Track solved DSA problems across multiple topics including:
 
 ---
 
+# 📸 Application Screenshots
+
+## Dashboard
+
+### Dashboard Overview
+
+![Dashboard Overview](screenshots/Dashboard-1.png)
+
+### Daily Progress View
+
+![Dashboard Progress](screenshots/Dashboard-2.png)
+
+### Streak & Progress Tracking
+
+![Dashboard Stats](screenshots/Dashboard-3.png)
+
+---
+
+## Problems Page
+
+Track solved and unsolved DSA problems.
+
+![Problems](screenshots/Problems.png)
+
+---
+
+## 90-Day Roadmap
+
+Structured roadmap divided into learning phases.
+
+![Roadmap](screenshots/Roadmap.png)
+
+---
+
+## Subjects Tracker
+
+Track preparation progress across CS core subjects.
+
+![Subjects](screenshots/Subjects.png)
+
+---
+
+## Study Timetable
+
+Daily structured timetable for consistent preparation.
+
+![Timetable](screenshots/Timetable.png)
+
+---
+
 ## 90-Day Structured Roadmap
 
 The learning journey is divided into **5 phases**:
