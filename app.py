@@ -1,6 +1,9 @@
 from flask import Flask, render_template, jsonify, request
 import sqlite3
 from datetime import datetime, date, timedelta
+from zoneinfo import ZoneInfo
+
+IST = ZoneInfo("Asia/Kolkata")
 
 app = Flask(__name__)
 
@@ -9,7 +12,7 @@ ROLLOVER_HOUR   = 5
 ROLLOVER_MINUTE = 30
 
 def get_study_date():
-    now = datetime.now()
+    now = datetime.now(IST)  # Always use IST
     rollover = now.replace(hour=ROLLOVER_HOUR, minute=ROLLOVER_MINUTE, second=0, microsecond=0)
     if now < rollover:
         return (now - timedelta(days=1)).date()
