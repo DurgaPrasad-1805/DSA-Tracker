@@ -4,7 +4,12 @@ A full-stack web application designed to track my daily Data Structures and Algo
 
 The platform allows me to monitor my learning progress, track solved problems, maintain streaks, and visualize performance using interactive charts.
 
-Live Website:
+---
+
+## 🌐 Live Demo
+
+Try the application here:
+
 https://dsa-tracker-cuee.onrender.com
 
 ---
