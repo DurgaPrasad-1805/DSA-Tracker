@@ -486,18 +486,18 @@
 <script>
 async function toggleVideo(checkEl, vkey) {
   const item = checkEl.closest('.vid-item');
-  const res  = await fetch('/api/toggle_video/' + encodeURIComponent(vkey), { method: 'POST' });
-  const data = await res.json();
-  if (data.ok) {
-    checkEl.classList.toggle('watched', data.watched === 1);
-    item.classList.toggle('watched', data.watched === 1);
-    // update dashboard video count if it exists
-    const vidCountEl = document.getElementById('videos-watched-count');
-    if (vidCountEl) {
-      const all = document.querySelectorAll('.vid-check.watched').length;
-      vidCountEl.textContent = all;
+  try {
+    const res  = await fetch('/api/toggle_video', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({vkey: vkey})
+    });
+    const data = await res.json();
+    if (data.ok) {
+      checkEl.classList.toggle('watched', data.watched === 1);
+      item.classList.toggle('watched', data.watched === 1);
     }
-  }
+  } catch(e) { console.error('toggleVideo error:', e); }
 }
 
 async function loadWatchedVideos() {

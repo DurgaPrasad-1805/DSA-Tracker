@@ -184,6 +184,29 @@ def toggle_day(day_num):
     conn.close()
     return jsonify({"ok": False}), 404
 
+@app.route("/api/toggle_video", methods=["POST"])
+def toggle_video():
+    data    = request.get_json()
+    vkey    = data.get("vkey","")
+    conn    = get_db()
+    row     = conn.execute("SELECT watched FROM video_watched WHERE video_key=?", (vkey,)).fetchone()
+    if row:
+        new_val = 0 if row["watched"] else 1
+        conn.execute("UPDATE video_watched SET watched=? WHERE video_key=?", (new_val, vkey))
+    else:
+        new_val = 1
+        conn.execute("INSERT INTO video_watched(video_key, watched) VALUES(?,1)", (vkey,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, watched=new_val)
+
+@app.route("/api/video_watched_all")
+def video_watched_all():
+    conn = get_db()
+    rows = conn.execute("SELECT video_key FROM video_watched WHERE watched=1").fetchall()
+    conn.close()
+    return jsonify(watched=[r["video_key"] for r in rows])
+
 @app.route("/api/weekly_progress")
 def weekly_progress():
     conn = get_db()
