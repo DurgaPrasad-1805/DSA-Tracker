@@ -130,6 +130,37 @@
       transform: rotate(45deg);
     }
 
+    /* ── Past missed day (not done, day < today) — dark grey, locked ── */
+    .day-box.past-missed {
+      background: #2d2d2d;
+      border-color: #1a1a1a;
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+    .day-box.past-missed:hover { transform: none; box-shadow: none; border-color: #1a1a1a; }
+    .day-box.past-missed .day-num { color: #666; }
+    .day-box.past-missed .day-check { background: #1a1a1a; border-color: #444; }
+
+    /* ── Past done day — locked (can't uncheck) ── */
+    .day-box.past-done {
+      cursor: not-allowed;
+    }
+    .day-box.past-done:hover { transform: none; box-shadow: none; }
+
+    /* ── Future day — locked greyed out ── */
+    .day-box.future {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .day-box.future:hover { transform: none; box-shadow: none; border-color: var(--border); }
+
+    /* ── Today — highlighted ring ── */
+    .day-box.today {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(26,122,74,0.25);
+    }
+    .day-box.today .day-num { color: var(--accent); font-weight: 700; }
+
     .day-num {
       font-family: 'DM Mono', monospace;
       font-size: 0.72rem; font-weight: 500;
@@ -469,7 +500,22 @@
           {% endif %}
           <div class="day-grid">
             {% for d in topic_days %}
-            <div class="day-box {{ 'done' if d.status==1 else '' }}" data-day="{{ d.day_number }}" onclick="toggleDay(this)">
+            {% if d.day_number < current_day %}
+              {% if d.status == 1 %}
+                {% set box_class = "day-box done past-done" %}
+              {% else %}
+                {% set box_class = "day-box past-missed" %}
+              {% endif %}
+            {% elif d.day_number == current_day %}
+              {% if d.status == 1 %}
+                {% set box_class = "day-box done today" %}
+              {% else %}
+                {% set box_class = "day-box today" %}
+              {% endif %}
+            {% else %}
+              {% set box_class = "day-box future" %}
+            {% endif %}
+            <div class="{{ box_class }}" data-day="{{ d.day_number }}" onclick="toggleDay(this)">
               <div class="day-check"></div>
               <div class="day-num">D{{ d.day_number }}</div>
             </div>
@@ -523,17 +569,26 @@ async function loadWatchedVideos() {
 document.addEventListener('DOMContentLoaded', loadWatchedVideos);
 
 async function toggleDay(box) {
+  // Don't allow toggling locked days
+  if (box.classList.contains('past-missed') ||
+      box.classList.contains('past-done') ||
+      box.classList.contains('future')) {
+    return;
+  }
+
   const day = box.dataset.day;
   const res  = await fetch(`/api/toggle_day/${day}`, { method: 'POST' });
   const data = await res.json();
   if (data.ok) {
-    box.classList.toggle('done', data.status === 1);
+    const isDone = data.status === 1;
+    // Re-apply correct classes for today
+    box.classList.remove('done');
+    if (isDone) box.classList.add('done');
     // update phase progress bar
     const phaseWrap = box.closest('.phase-wrap');
     if (phaseWrap) {
       const fill = phaseWrap.querySelector('.phase-prog-fill');
       const txt  = phaseWrap.querySelector('.phase-prog-txt');
-      const countEl = phaseWrap.querySelector('.phase-prog + span, .phase-prog span');
       const pct  = Math.round((data.phase_done / data.phase_total) * 100);
       if (fill) fill.style.width = pct + '%';
       if (txt)  txt.textContent  = pct + '%';

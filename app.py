@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-import sqlite3
+import os
 from datetime import datetime, date, timedelta
 from zoneinfo import ZoneInfo
 
@@ -11,23 +11,33 @@ START_DATE      = date(2026, 3, 8)
 ROLLOVER_HOUR   = 5
 ROLLOVER_MINUTE = 30
 
-def get_study_date():
-    now = datetime.now(IST)  # Always use IST
-    rollover = now.replace(hour=ROLLOVER_HOUR, minute=ROLLOVER_MINUTE, second=0, microsecond=0)
-    if now < rollover:
-        return (now - timedelta(days=1)).date()
-    return now.date()
+# ── Database: PostgreSQL on Render, SQLite locally ────────────────────────────
+DATABASE_URL = os.environ.get("DATABASE_URL")  # Set this on Render
 
-def get_current_day():
-    study_date = get_study_date()
-    delta = (study_date - START_DATE).days + 1
-    return max(1, min(delta, 90))
+if DATABASE_URL:
+    # Render provides postgres://... but psycopg2 needs postgresql://
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    import psycopg2
+    import psycopg2.extras
+    DB_TYPE = "postgres"
+else:
+    import sqlite3
+    DB_TYPE = "sqlite"
+    DB_PATH = "database.db"
 
 def get_db():
-    conn = sqlite3.connect("database.db")
-    conn.row_factory = sqlite3.Row
+    if DB_TYPE == "postgres":
+        conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+        return conn
+    else:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=WAL")
+        _run_migrations_sqlite(conn)
+        return conn
 
-    # Safe migrations — never crash if columns/tables already exist
+def _run_migrations_sqlite(conn):
     migrations = [
         "ALTER TABLE meta ADD COLUMN longest_streak INTEGER DEFAULT 0",
         """CREATE TABLE IF NOT EXISTS daily_progress (
@@ -46,11 +56,99 @@ def get_db():
         except Exception:
             pass
 
-    return conn
+def _run_migrations_postgres(conn):
+    cur = conn.cursor()
+    stmts = [
+        "ALTER TABLE meta ADD COLUMN IF NOT EXISTS longest_streak INTEGER DEFAULT 0",
+        """CREATE TABLE IF NOT EXISTS daily_progress (
+            date  TEXT PRIMARY KEY,
+            count INTEGER DEFAULT 0
+        )""",
+        """CREATE TABLE IF NOT EXISTS video_watched (
+            video_key TEXT PRIMARY KEY,
+            watched   INTEGER DEFAULT 0
+        )""",
+        """CREATE TABLE IF NOT EXISTS meta (
+            id INTEGER PRIMARY KEY,
+            streak INTEGER DEFAULT 0,
+            day_number INTEGER DEFAULT 0,
+            last_active TEXT DEFAULT '',
+            longest_streak INTEGER DEFAULT 0
+        )""",
+        """CREATE TABLE IF NOT EXISTS problems (
+            id SERIAL PRIMARY KEY,
+            name TEXT UNIQUE,
+            pattern TEXT,
+            topic TEXT,
+            difficulty TEXT DEFAULT 'Medium',
+            status INTEGER DEFAULT 0
+        )""",
+        """CREATE TABLE IF NOT EXISTS subjects (
+            id SERIAL PRIMARY KEY,
+            name TEXT UNIQUE,
+            status INTEGER DEFAULT 0
+        )""",
+        """CREATE TABLE IF NOT EXISTS roadmap_days (
+            day_number INTEGER PRIMARY KEY,
+            phase INTEGER,
+            phase_name TEXT,
+            topic TEXT,
+            status INTEGER DEFAULT 0
+        )""",
+    ]
+    for sql in stmts:
+        try:
+            cur.execute(sql)
+        except Exception:
+            conn.rollback()
+            cur = conn.cursor()
+    conn.commit()
+
+def query(conn, sql, params=(), one=False):
+    """Unified query helper for both SQLite and PostgreSQL."""
+    if DB_TYPE == "postgres":
+        sql = sql.replace("?", "%s")
+        sql = sql.replace("INTEGER DEFAULT 0", "INTEGER DEFAULT 0")
+    cur = conn.cursor()
+    cur.execute(sql, params)
+    if one:
+        row = cur.fetchone()
+        if row is None:
+            return None
+        if DB_TYPE == "postgres":
+            return row  # already a dict
+        return row
+    rows = cur.fetchall()
+    return rows
+
+def execute(conn, sql, params=()):
+    if DB_TYPE == "postgres":
+        sql = sql.replace("?", "%s")
+    cur = conn.cursor()
+    cur.execute(sql, params)
+
+def get_study_date():
+    now = datetime.now(IST)
+    rollover = now.replace(hour=ROLLOVER_HOUR, minute=ROLLOVER_MINUTE, second=0, microsecond=0)
+    if now < rollover:
+        return (now - timedelta(days=1)).date()
+    return now.date()
+
+def get_current_day():
+    study_date = get_study_date()
+    delta = (study_date - START_DATE).days + 1
+    return max(1, min(delta, 90))
+
+def row_val(row, key, default=0):
+    """Get value from either sqlite Row or psycopg2 RealDictRow."""
+    try:
+        return row[key]
+    except (KeyError, TypeError, IndexError):
+        return default
 
 def sync_day(conn):
     day = get_current_day()
-    conn.execute("UPDATE meta SET day_number=? WHERE id=1", (day,))
+    execute(conn, "UPDATE meta SET day_number=? WHERE id=1", (day,))
     return day
 
 # ── Routes ───────────────────────────────────────────────────────────────────
@@ -59,22 +157,28 @@ def sync_day(conn):
 def home():
     try:
         conn        = get_db()
-        solved      = conn.execute("SELECT COUNT(*) FROM problems WHERE status=1").fetchone()[0]
-        total       = conn.execute("SELECT COUNT(*) FROM problems").fetchone()[0]
-        vid_watched = conn.execute("SELECT COUNT(*) FROM video_watched WHERE watched=1").fetchone()[0]
-        meta        = conn.execute("SELECT streak, longest_streak FROM meta WHERE id=1").fetchone()
+        if DB_TYPE == "postgres":
+            _run_migrations_postgres(conn)
+
+        solved      = query(conn, "SELECT COUNT(*) as c FROM problems WHERE status=1", one=True)
+        solved      = row_val(solved, "c", 0) if solved else 0
+        total       = query(conn, "SELECT COUNT(*) as c FROM problems", one=True)
+        total       = row_val(total, "c", 0) if total else 0
+        vid_watched = query(conn, "SELECT COUNT(*) as c FROM video_watched WHERE watched=1", one=True)
+        vid_watched = row_val(vid_watched, "c", 0) if vid_watched else 0
+        meta        = query(conn, "SELECT streak, longest_streak FROM meta WHERE id=1", one=True)
 
         study_date       = get_study_date()
         days_until_start = (START_DATE - study_date).days
-        streak           = meta["streak"]        if meta else 0
-        longest_streak   = meta["longest_streak"] if meta else 0
+        streak           = row_val(meta, "streak", 0)
+        longest_streak   = row_val(meta, "longest_streak", 0)
 
         if days_until_start > 0:
             conn.close()
             return render_template("index.html",
                 solved=solved, total=total, vid_watched=vid_watched,
                 streak=0, longest_streak=0,
-                day=0, days_until_start=days_until_start, started=False)
+                day=0, days_until_start=days_until_start, started=False, current_day=0)
         else:
             day = sync_day(conn)
             conn.commit()
@@ -82,15 +186,16 @@ def home():
             return render_template("index.html",
                 solved=solved, total=total, vid_watched=vid_watched,
                 streak=streak, longest_streak=longest_streak,
-                day=day, days_until_start=0, started=True)
+                day=day, days_until_start=0, started=True, current_day=day)
     except Exception as e:
-        return f"<h2>Error in home route</h2><pre>{e}</pre>", 500
+        import traceback
+        return f"<h2>Error in home route</h2><pre>{traceback.format_exc()}</pre>", 500
 
 @app.route("/dsa")
 def dsa():
     conn = get_db()
     sync_day(conn); conn.commit()
-    problems = conn.execute("SELECT * FROM problems ORDER BY topic, id").fetchall()
+    problems = query(conn, "SELECT * FROM problems ORDER BY topic, id")
     conn.close()
     return render_template("dsa.html", problems=problems)
 
@@ -98,9 +203,9 @@ def dsa():
 def subjects():
     conn = get_db()
     sync_day(conn); conn.commit()
-    subjects = conn.execute("SELECT * FROM subjects").fetchall()
+    subs = query(conn, "SELECT * FROM subjects")
     conn.close()
-    return render_template("subjects.html", subjects=subjects)
+    return render_template("subjects.html", subjects=subs)
 
 @app.route("/timetable")
 def timetable():
@@ -109,48 +214,57 @@ def timetable():
 @app.route("/roadmap")
 def roadmap():
     conn = get_db()
-    sync_day(conn); conn.commit()
-    days = conn.execute("SELECT * FROM roadmap_days ORDER BY day_number").fetchall()
+    day = sync_day(conn); conn.commit()
+    days = query(conn, "SELECT * FROM roadmap_days ORDER BY day_number")
     conn.close()
-    return render_template("roadmap.html", days=days)
+    return render_template("roadmap.html", days=days, current_day=day)
 
 # ── API ──────────────────────────────────────────────────────────────────────
 
 @app.route("/api/toggle_problem/<int:pid>", methods=["POST"])
 def toggle_problem(pid):
     conn = get_db()
-    cur  = conn.execute("SELECT status FROM problems WHERE id=?", (pid,)).fetchone()
+    cur  = query(conn, "SELECT status FROM problems WHERE id=?", (pid,), one=True)
     if cur:
-        new_status = 1 - cur[0]
-        conn.execute("UPDATE problems SET status=? WHERE id=?", (new_status, pid))
+        new_status = 1 - row_val(cur, "status", 0)
+        execute(conn, "UPDATE problems SET status=? WHERE id=?", (new_status, pid))
 
         study_today = get_study_date().isoformat()
 
         if new_status == 1:
-            conn.execute("""
-                INSERT INTO daily_progress(date, count) VALUES(?,1)
-                ON CONFLICT(date) DO UPDATE SET count=count+1
-            """, (study_today,))
-            meta = conn.execute("SELECT last_active, streak, longest_streak FROM meta WHERE id=1").fetchone()
-            if meta and meta["last_active"] != study_today:
-                yesterday  = (get_study_date() - timedelta(days=1)).isoformat()
-                new_streak = (meta["streak"] + 1) if meta["last_active"] == yesterday else 1
-                new_longest = max(new_streak, meta["longest_streak"] or 0)
-                conn.execute(
+            if DB_TYPE == "postgres":
+                execute(conn, """
+                    INSERT INTO daily_progress(date, count) VALUES(%s,1)
+                    ON CONFLICT(date) DO UPDATE SET count=daily_progress.count+1
+                """.replace("?","%s"), (study_today,))
+            else:
+                execute(conn, """
+                    INSERT INTO daily_progress(date, count) VALUES(?,1)
+                    ON CONFLICT(date) DO UPDATE SET count=count+1
+                """, (study_today,))
+            meta = query(conn, "SELECT last_active, streak, longest_streak FROM meta WHERE id=1", one=True)
+            if meta and row_val(meta, "last_active", "") != study_today:
+                yesterday   = (get_study_date() - timedelta(days=1)).isoformat()
+                cur_streak  = row_val(meta, "streak", 0)
+                last_active = row_val(meta, "last_active", "")
+                new_streak  = (cur_streak + 1) if last_active == yesterday else 1
+                new_longest = max(new_streak, row_val(meta, "longest_streak", 0) or 0)
+                execute(conn,
                     "UPDATE meta SET last_active=?, streak=?, longest_streak=? WHERE id=1",
                     (study_today, new_streak, new_longest)
                 )
         else:
-            conn.execute("UPDATE daily_progress SET count=MAX(0,count-1) WHERE date=?", (study_today,))
+            execute(conn, "UPDATE daily_progress SET count=MAX(0,count-1) WHERE date=?", (study_today,))
 
         conn.commit()
-        solved = conn.execute("SELECT COUNT(*) FROM problems WHERE status=1").fetchone()[0]
-        meta   = conn.execute("SELECT streak, longest_streak FROM meta WHERE id=1").fetchone()
+        solved_row = query(conn, "SELECT COUNT(*) as c FROM problems WHERE status=1", one=True)
+        solved = row_val(solved_row, "c", 0)
+        meta   = query(conn, "SELECT streak, longest_streak FROM meta WHERE id=1", one=True)
         conn.close()
         return jsonify({
             "ok": True, "status": new_status, "solved": solved,
-            "streak": meta["streak"] if meta else 0,
-            "longest_streak": meta["longest_streak"] if meta else 0
+            "streak": row_val(meta, "streak", 0),
+            "longest_streak": row_val(meta, "longest_streak", 0)
         })
     conn.close()
     return jsonify({"ok": False}), 404
@@ -158,10 +272,10 @@ def toggle_problem(pid):
 @app.route("/api/toggle_subject/<int:sid>", methods=["POST"])
 def toggle_subject(sid):
     conn = get_db()
-    cur  = conn.execute("SELECT status FROM subjects WHERE id=?", (sid,)).fetchone()
+    cur  = query(conn, "SELECT status FROM subjects WHERE id=?", (sid,), one=True)
     if cur:
-        new_status = 1 - cur[0]
-        conn.execute("UPDATE subjects SET status=? WHERE id=?", (new_status, sid))
+        new_status = 1 - row_val(cur, "status", 0)
+        execute(conn, "UPDATE subjects SET status=? WHERE id=?", (new_status, sid))
         conn.commit()
         conn.close()
         return jsonify({"ok": True, "status": new_status})
@@ -170,17 +284,36 @@ def toggle_subject(sid):
 
 @app.route("/api/toggle_day/<int:day_num>", methods=["POST"])
 def toggle_day(day_num):
+    current_day = get_current_day()
     conn  = get_db()
-    cur   = conn.execute("SELECT status FROM roadmap_days WHERE day_number=?", (day_num,)).fetchone()
+    cur   = query(conn, "SELECT status FROM roadmap_days WHERE day_number=?", (day_num,), one=True)
     if cur:
-        new_status = 1 - cur[0]
-        conn.execute("UPDATE roadmap_days SET status=? WHERE day_number=?", (new_status, day_num))
+        current_status = row_val(cur, "status", 0)
+
+        # Block future days
+        if day_num > current_day:
+            conn.close()
+            return jsonify({"ok": False, "reason": "future"}), 403
+
+        # Block past days (both done and missed — immutable)
+        if day_num < current_day:
+            conn.close()
+            return jsonify({"ok": False, "reason": "past_locked"}), 403
+
+        # Only today can toggle
+        new_status = 1 - current_status
+        execute(conn, "UPDATE roadmap_days SET status=? WHERE day_number=?", (new_status, day_num))
         conn.commit()
-        phase = conn.execute("SELECT phase FROM roadmap_days WHERE day_number=?", (day_num,)).fetchone()[0]
-        done  = conn.execute("SELECT COUNT(*) FROM roadmap_days WHERE phase=? AND status=1", (phase,)).fetchone()[0]
-        total = conn.execute("SELECT COUNT(*) FROM roadmap_days WHERE phase=?", (phase,)).fetchone()[0]
+        phase_row = query(conn, "SELECT phase FROM roadmap_days WHERE day_number=?", (day_num,), one=True)
+        phase = row_val(phase_row, "phase", 1)
+        done_row  = query(conn, "SELECT COUNT(*) as c FROM roadmap_days WHERE phase=? AND status=1", (phase,), one=True)
+        total_row = query(conn, "SELECT COUNT(*) as c FROM roadmap_days WHERE phase=?", (phase,), one=True)
         conn.close()
-        return jsonify({"ok": True, "status": new_status, "phase_done": done, "phase_total": total})
+        return jsonify({
+            "ok": True, "status": new_status,
+            "phase_done": row_val(done_row, "c", 0),
+            "phase_total": row_val(total_row, "c", 0)
+        })
     conn.close()
     return jsonify({"ok": False}), 404
 
@@ -189,13 +322,13 @@ def toggle_video():
     data    = request.get_json()
     vkey    = data.get("vkey","")
     conn    = get_db()
-    row     = conn.execute("SELECT watched FROM video_watched WHERE video_key=?", (vkey,)).fetchone()
+    row     = query(conn, "SELECT watched FROM video_watched WHERE video_key=?", (vkey,), one=True)
     if row:
-        new_val = 0 if row["watched"] else 1
-        conn.execute("UPDATE video_watched SET watched=? WHERE video_key=?", (new_val, vkey))
+        new_val = 0 if row_val(row, "watched", 0) else 1
+        execute(conn, "UPDATE video_watched SET watched=? WHERE video_key=?", (new_val, vkey))
     else:
         new_val = 1
-        conn.execute("INSERT INTO video_watched(video_key, watched) VALUES(?,1)", (vkey,))
+        execute(conn, "INSERT INTO video_watched(video_key, watched) VALUES(?,1)", (vkey,))
     conn.commit()
     conn.close()
     return jsonify(ok=True, watched=new_val)
@@ -203,18 +336,18 @@ def toggle_video():
 @app.route("/api/video_watched_all")
 def video_watched_all():
     conn = get_db()
-    rows = conn.execute("SELECT video_key FROM video_watched WHERE watched=1").fetchall()
+    rows = query(conn, "SELECT video_key FROM video_watched WHERE watched=1")
     conn.close()
-    return jsonify(watched=[r["video_key"] for r in rows])
+    return jsonify(watched=[row_val(r, "video_key", "") for r in rows])
 
 @app.route("/api/weekly_progress")
 def weekly_progress():
     conn = get_db()
-    rows = conn.execute("SELECT date, count FROM daily_progress ORDER BY date").fetchall()
+    rows = query(conn, "SELECT date, count FROM daily_progress ORDER BY date")
     conn.close()
     weekly = {}
     for row in rows:
-        d = date.fromisoformat(row["date"])
+        d = date.fromisoformat(row_val(row, "date", ""))
         delta = (d - START_DATE).days
         if delta < 0:
             continue
@@ -222,16 +355,20 @@ def weekly_progress():
         if week_num > 13:
             continue
         label = f"W{week_num}"
-        weekly[label] = weekly.get(label, 0) + row["count"]
+        weekly[label] = weekly.get(label, 0) + row_val(row, "count", 0)
     all_weeks = [f"W{i}" for i in range(1, 14)]
     return jsonify([{"week": w, "count": weekly.get(w, 0)} for w in all_weeks])
 
 @app.route("/api/daily_counts")
 def daily_counts():
     conn = get_db()
-    rows = conn.execute("SELECT date, count FROM daily_progress").fetchall()
+    rows = query(conn, "SELECT date, count FROM daily_progress")
     conn.close()
-    return jsonify({r["date"]: r["count"] for r in rows})
+    return jsonify({row_val(r, "date", ""): row_val(r, "count", 0) for r in rows})
+
+@app.route("/api/current_day")
+def api_current_day():
+    return jsonify({"day": get_current_day()})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
