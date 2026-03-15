@@ -370,5 +370,76 @@ def daily_counts():
 def api_current_day():
     return jsonify({"day": get_current_day()})
 
+def auto_seed():
+    """Auto-seed the database on first run if empty."""
+    import json
+    try:
+        conn = get_db()
+        if DB_TYPE == "postgres":
+            _run_migrations_postgres(conn)
+        
+        # Check if already seeded
+        count = query(conn, "SELECT COUNT(*) as c FROM problems", one=True)
+        if count and row_val(count, "c", 0) > 0:
+            conn.close()
+            return  # Already seeded
+
+        print("Auto-seeding database...")
+
+        # Seed problems from JSON
+        with open("data/problems.json") as f:
+            problems = json.load(f)
+        for p in problems:
+            try:
+                execute(conn, "INSERT INTO problems(name, pattern, topic, difficulty, status) VALUES(?,?,?,?,0)",
+                    (p["name"], p.get("pattern",""), p["topic"], p.get("difficulty","Medium")))
+            except: pass
+
+        # Seed meta
+        try:
+            execute(conn, "INSERT INTO meta(id, streak, day_number, last_active, longest_streak) VALUES(?,0,0,'',0)", (1,))
+        except: pass
+
+        # Seed subjects
+        for s in ["DSA","DBMS","Operating Systems","Computer Networks","OOPs","Machine Learning"]:
+            try:
+                execute(conn, "INSERT INTO subjects(name, status) VALUES(?,0)", (s,))
+            except: pass
+
+        # Seed roadmap days
+        roadmap = [
+            *[(d,1,"Foundations","Algorithmic Thinking + Complexity") for d in range(1,4)],
+            *[(d,1,"Foundations","Arrays") for d in range(4,8)],
+            *[(d,1,"Foundations","Binary Search") for d in range(8,11)],
+            *[(d,1,"Foundations","Strings") for d in range(11,15)],
+            *[(d,1,"Foundations","Linked List") for d in range(15,21)],
+            *[(d,2,"Core Structures","Stack") for d in range(21,26)],
+            *[(d,2,"Core Structures","Queue") for d in range(26,31)],
+            *[(d,2,"Core Structures","Hash Tables") for d in range(31,36)],
+            *[(d,3,"Important Patterns","Recursion") for d in range(36,41)],
+            *[(d,3,"Important Patterns","Backtracking") for d in range(41,46)],
+            *[(d,3,"Important Patterns","Sorting Algorithms") for d in range(46,51)],
+            *[(d,3,"Important Patterns","Heap / Priority Queue") for d in range(51,56)],
+            *[(d,4,"Trees + Graphs","Trees") for d in range(56,66)],
+            *[(d,4,"Trees + Graphs","Trie") for d in range(66,71)],
+            *[(d,4,"Trees + Graphs","Graph Basics") for d in range(71,76)],
+            *[(d,5,"Advanced Algorithms","Graph Algorithms") for d in range(76,81)],
+            *[(d,5,"Advanced Algorithms","Dynamic Programming") for d in range(81,87)],
+            *[(d,5,"Advanced Algorithms","Mock Interviews + Revision") for d in range(87,91)],
+        ]
+        for day_num, phase, phase_name, topic in roadmap:
+            try:
+                execute(conn, "INSERT INTO roadmap_days(day_number, phase, phase_name, topic, status) VALUES(?,?,?,?,0)",
+                    (day_num, phase, phase_name, topic))
+            except: pass
+
+        conn.commit()
+        conn.close()
+        print("✅ Database seeded successfully!")
+    except Exception as e:
+        print(f"Seed error: {e}")
+
+auto_seed()
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
