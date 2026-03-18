@@ -435,7 +435,7 @@ def auto_seed():
 
         conn.commit()
         conn.close()
-        print("✅ Database seeded successfully!")
+        print("Database seeded successfully!")
     except Exception as e:
         print(f"Seed error: {e}")
 
