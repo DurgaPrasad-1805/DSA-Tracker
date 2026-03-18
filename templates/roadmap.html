@@ -296,15 +296,16 @@
   {% set total_days = days | length %}
   {% set done_days  = days | selectattr('status','equalto',1) | list | length %}
   {% set pct_overall = ((done_days / total_days)*100)|round|int if total_days > 0 else 0 %}
+  {% set pct_journey = ((current_day / total_days)*100)|round|int if total_days > 0 else 0 %}
 
   <!-- Overall progress -->
   <div class="overall-prog fade-up">
     <div class="progress-header">
       <span class="progress-title">Overall Journey</span>
-      <span class="progress-pct">Day {{ done_days }} / {{ total_days }} · {{ pct_overall }}%</span>
+      <span class="progress-pct">Day {{ current_day }} / {{ total_days }} · {{ pct_overall }}%</span>
     </div>
     <div class="progress-track">
-      <div class="progress-fill" data-pct="{{ pct_overall }}" style="width:0%"></div>
+      <div class="progress-fill" data-pct="{{ pct_journey }}" style="width:0%"></div>
     </div>
     <div class="phase-colors" style="margin-top:1rem;">
       <span class="phase-chip p1">Phase 1 · Foundations · D1–D20</span>
