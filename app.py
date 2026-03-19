@@ -8,8 +8,8 @@ IST = ZoneInfo("Asia/Kolkata")
 app = Flask(__name__)
 
 START_DATE      = date(2026, 3, 19)
-ROLLOVER_HOUR   = 5
-ROLLOVER_MINUTE = 30
+ROLLOVER_HOUR   = 9
+ROLLOVER_MINUTE = 0
 
 # ── Database: PostgreSQL on Render, SQLite locally ────────────────────────────
 DATABASE_URL = os.environ.get("DATABASE_URL")  # Set this on Render
